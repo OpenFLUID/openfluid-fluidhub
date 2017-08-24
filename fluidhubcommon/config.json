@@ -1,0 +1,19 @@
+{
+  "global" : {
+    "name" : "none",
+    "status" : "production",
+    "logdir" : "log"
+  },
+  "api" : {
+    "version" : "0.7-20151124",
+    "port" : 3447
+  },
+  "wareshub" : {
+    "enabled" : true,
+    "gitserver" : {
+      "port" : 3448,
+      "reposdir" : "wareshub/repositories",
+      "defsdir" : "wareshub/definitions"
+    }
+  }
+}

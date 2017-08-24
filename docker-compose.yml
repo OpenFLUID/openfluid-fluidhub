@@ -1,0 +1,31 @@
+version: "2"
+
+services:
+  api:
+    build:
+      context: ./services/api
+    image: fluidhub/api
+    volumes:
+      - ./services/api:/app/services/api:ro
+      - ./fluidhubcommon:/app/fluidhubcommon:ro
+      - ${FLUIDHUB_DATAPATH}/common:/data/common:ro
+      - ${FLUIDHUB_DATAPATH}/wareshub:/data/wareshub:rw
+#      - ${FLUIDHUB_DATAPATH}/log:/data/log:rw
+    environment:
+      - PYTHONPATH=/app/fluidhubcommon:$PYTHONPATH
+    ports:
+      - "3447:3447"
+  wareshub-git:
+    build:
+      context: ./services/wareshub-git
+    image: fluidhub/wareshub-git
+    volumes:
+      - ./services/wareshub-git:/app/services/wareshub-git:ro
+      - ./fluidhubcommon:/app/fluidhubcommon:ro
+      - ${FLUIDHUB_DATAPATH}/common:/data/common:ro
+      - ${FLUIDHUB_DATAPATH}/wareshub:/data/wareshub:rw
+#      - ${FLUIDHUB_DATAPATH}/log:/data/log:rw
+    environment:
+      - PYTHONPATH=/app/fluidhubcommon:$PYTHONPATH
+    ports:
+      - "3448:3448"

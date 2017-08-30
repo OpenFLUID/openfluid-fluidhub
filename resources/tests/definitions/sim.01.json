@@ -1,0 +1,10 @@
+{
+  "description": "This is simulator 01",
+  "users-ro": [],
+  "users-rw": [
+    "admin"
+  ],
+  "mailinglist": [
+    "contact@openfluid-project.org"
+  ]
+}

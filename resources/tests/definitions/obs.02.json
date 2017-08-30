@@ -1,0 +1,12 @@
+{
+  "description": "This is observer 02",
+  "users-ro": [
+    "user2"
+  ],
+  "users-rw": [
+    "user2"
+  ],
+  "mailinglist": [
+    "contact@openfluid-project.org"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "description": "This is Builder-extension 01",
+  "users-ro": [
+    "*"
+  ],
+  "users-rw": [
+    "admin"
+  ],
+  "mailinglist": [
+    "contact@openfluid-project.org"
+  ]
+}

@@ -6,6 +6,7 @@ __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 import os
 import json
 import subprocess
+import shutil
 
 from fluidhubcommon import ConfigManager
 from fluidhubcommon import Constants
@@ -96,7 +97,7 @@ class WaresOperations :
 ################################################################################
 
 
-  def CreateWare(self,Type,ID,Definition) :
+  def createWare(self,Type,ID,Definition) :
 
     WareGitPath = self.getWareGitReposPath(Type,ID)
     WareDefPath = self.getWaresDefsPath(Type)
@@ -133,11 +134,75 @@ class WaresOperations :
     if not os.path.isfile(WareDefFile) :
       return 500,"error while creating definition file"
 
+    return 201,""
+
+
+################################################################################
+
+
+  def updateWare(self,Type,ID,Definition) :
+
+    WareGitPath = self.getWareGitReposPath(Type,ID)
+    WareDefPath = self.getWaresDefsPath(Type)
+    WareDefFile = self.getWareDefFilePath(Type,ID)
+
+    if not os.path.exists(WareGitPath) or not os.path.isfile(WareDefFile) :
+      return 404,"does not exists"
+
+    return 501,"not implemented"
+
     return 200,""
 
 
 ################################################################################
 
 
-  def GetWareInfo(self,Type,ID) :
+  def deleteWare(self,Type,ID) :
+
+    WareGitPath = self.getWareGitReposPath(Type,ID)
+    WareDefPath = self.getWaresDefsPath(Type)
+    WareDefFile = self.getWareDefFilePath(Type,ID)
+
+    if not os.path.exists(WareGitPath) and not os.path.isfile(WareDefFile) :
+      return 404,"does not exists"
+
+    if os.path.exists(WareGitPath) :
+      shutil.rmtree(WareGitPath)
+
+    if os.path.isfile(WareDefFile) :
+      os.remove(WareDefFile)
+
+    return 200,""
+
+
+################################################################################
+
+
+  def getWareInfo(self,Type,ID) :
+
+    WareGitPath = self.getWareGitReposPath(Type,ID)
+    WareDefPath = self.getWaresDefsPath(Type)
+    WareDefFile = self.getWareDefFilePath(Type,ID)
+
+    if not os.path.exists(WareGitPath) or not os.path.isfile(WareDefFile) :
+      return 404,"does not exists"
+
+    with open(WareDefFile, 'r') as DefFile:
+      Data = json.load(DefFile)
+      return 200,Data
+
+    return 500,dict()
+
+
+################################################################################
+
+
+  def getWaresInfo(self,Type) :
+    return 501,dict()
+
+
+################################################################################
+
+
+  def getAllWaresInfo(self) :
     return 501,dict()

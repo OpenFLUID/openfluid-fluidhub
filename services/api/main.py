@@ -61,18 +61,26 @@ def root():
 if Config["wareshub"]["enabled"] == True :
 
   @app.route('/wares', methods=['GET'])
-  def WaresGet() :
-    return "not implemented",501
+  def GetAllWares() :
+        WaresOps = WaresOperations()
+
+        Code,Data = WaresOps.getAllWaresInfo()
+        return jsonify(Data),Code
 
 
 ################################################################################
 
 
   @app.route('/wares/<string:ware_type>', methods=['GET'])
-  def ProcessWaresType(ware_type) :
+  def GetWares(ware_type) :
+
     if ware_type not in Constants.WareTypes :
       return "invalid ware type",404
-    return "not implemented",501
+
+    WaresOps = WaresOperations()
+
+    Code,Data = WaresOps.getWaresInfo(ware_type)
+    return jsonify(Data),Code
 
 
 ################################################################################
@@ -86,7 +94,7 @@ if Config["wareshub"]["enabled"] == True :
 
     WaresOps = WaresOperations()
 
-    Code,Data = WaresOps.GetWareInfo(ware_type,ware_id)
+    Code,Data = WaresOps.getWareInfo(ware_type,ware_id)
     return jsonify(Data),Code
 
 
@@ -103,8 +111,43 @@ if Config["wareshub"]["enabled"] == True :
     WaresOps = WaresOperations()
 
     if request.method == 'PUT' :
-      Code,Data = WaresOps.CreateWare(ware_type,ware_id,request.get_json(silent=True))
+      Code,Data = WaresOps.createWare(ware_type,ware_id,request.get_json(silent=True))
       return Data,Code
+
+
+################################################################################
+
+
+  @app.route('/wares/<string:ware_type>/<string:ware_id>', methods=['PATCH'])
+  @tokenAuth.login_required
+  def UpdateWare(ware_type,ware_id) :
+
+    if ware_type not in Constants.WareTypes :
+      return "invalid ware type",404
+
+    WaresOps = WaresOperations()
+
+    if request.method == 'PATCH' :
+      Code,Data = WaresOps.updateWare(ware_type,ware_id,request.get_json(silent=True))
+      return Data,Code
+
+
+################################################################################
+
+
+  @app.route('/wares/<string:ware_type>/<string:ware_id>', methods=['DELETE'])
+  @tokenAuth.login_required
+  def DeleteWare(ware_type,ware_id) :
+
+    if ware_type not in Constants.WareTypes :
+      return "invalid ware type",404
+
+    WaresOps = WaresOperations()
+
+    if request.method == 'DELETE' :
+      Code,Data = WaresOps.deleteWare(ware_type,ware_id)
+      return Data,Code
+
 
 
 ################################################################################

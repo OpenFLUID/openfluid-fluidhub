@@ -18,4 +18,4 @@ RUN mkdir -p /data
 
 WORKDIR /app
 
-CMD uwsgi --http-socket :3447 --plugin python --wsgi-file services/api/main.py --callable app
+CMD uwsgi --http-socket :3447 --plugin python --pythonpath services/api --enable-threads --wsgi-file services/api/main.py --callable app

@@ -24,7 +24,8 @@ class GitMailManager :
 
 
   def sendMail(self,Objects) :
-    print "TODO: send mail to", self.MailingList
+  # TODO implement mail sender
+    print "send mail to", self.MailingList
 
     for obj in Objects.read_objects():
       if obj.obj_type_num == 1: # Commit

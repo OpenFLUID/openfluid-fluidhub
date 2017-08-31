@@ -27,8 +27,13 @@ def getWare(Type,ID) :
 ################################################################################
 
 
-def getWares(Type) :
-  URL = "http://127.0.0.1:3447/wares/%s" % (Type)
+def getWares(Type,Username=None) :
+
+  UserArg = ""
+  if Username :
+    UserArg = "?username=%s" % Username
+
+  URL = "http://127.0.0.1:3447/wares/%s%s" % (Type,UserArg)
   Headers = {
      'cache-control': "no-cache",
   }
@@ -61,5 +66,6 @@ for Type, IDs in common.Wares.iteritems():
   for ID in IDs:
     getWare(Type,ID)
   getWares(Type)
+  getWares(Type,"admin")
 
 getAllWares()

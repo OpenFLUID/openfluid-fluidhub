@@ -71,7 +71,7 @@ def processInfoRefs(ware_type,ware_id):
   # Build response
   Res = make_response(Data)
   Res.headers['Expires'] = 'Fri, 01 Jan 1980 00:00:00 GMT'
-  Res.headers['Pragma'] = 'nfrom fluidhubcommon import Constantso-cache'
+  Res.headers['Pragma'] = 'no-cache'
   Res.headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate'
   Res.headers['Content-Type'] = 'application/x-%s-advertisement' % Service
 
@@ -151,4 +151,4 @@ def processGitUploadPack(ware_type,ware_id):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=Config.get("wareshub","gitserver.port"))

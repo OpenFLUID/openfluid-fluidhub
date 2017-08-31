@@ -43,14 +43,14 @@ def verify_token(token) :
 def root():
   Capabilities = []
 
-  if Config["wareshub"]["enabled"] == True :
+  if Config.getboolean("wareshub","enabled") :
     Capabilities.append('wares')
 
   return jsonify({ 'nature' : 'OpenFLUID FluidHub',
-                   'name' : Config["global"]["name"],
-                   'api-version' : Config["api"]["version"],
+                   'name' : Config.get("global","name"),
+                   'api-version' : Config.get("api","version"),
                    'capabilities' : Capabilities,
-                   'status' : Config["global"]["status"]
+                   'status' : Config.get("global","status")
                  })
 
 
@@ -58,7 +58,7 @@ def root():
 ################################################################################
 
 
-if Config["wareshub"]["enabled"] == True :
+if Config.getboolean("wareshub","enabled") :
 
   @app.route('/wares', methods=['GET'])
   def GetAllWares() :
@@ -79,7 +79,7 @@ if Config["wareshub"]["enabled"] == True :
 
     WaresOps = WaresOperations()
 
-    Code,Data = WaresOps.getWaresInfo(ware_type)
+    Code,Data = WaresOps.getWaresInfo(ware_type,request.args.get("username",""))
     return jsonify(Data),Code
 
 
@@ -155,4 +155,4 @@ if Config["wareshub"]["enabled"] == True :
 
 
 if __name__ == '__main__':
-  app.run(port=Config["api"]["port"])
+  app.run(port=Config.get("api","port"))

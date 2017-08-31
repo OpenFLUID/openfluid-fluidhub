@@ -7,6 +7,7 @@ import os
 import json
 import subprocess
 import shutil
+import glob
 
 from fluidhubcommon import ConfigManager
 from fluidhubcommon import Constants
@@ -22,8 +23,8 @@ class WaresOperations :
 
     self.Config = ConfigManager.get()
 
-    self.ReposRootDir = os.path.join(Constants.RootDataPath,self.Config["wareshub"]["gitserver"]["reposdir"])
-    self.DefsRootDir = os.path.join(Constants.RootDataPath,self.Config["wareshub"]["gitserver"]["defsdir"])
+    self.ReposRootDir = os.path.join(Constants.RootDataPath,self.Config.get("wareshub","gitserver.reposdir"))
+    self.DefsRootDir = os.path.join(Constants.RootDataPath,self.Config.get("wareshub","gitserver.defsdir"))
 
 
 ################################################################################
@@ -59,6 +60,28 @@ class WaresOperations :
         return Data
 
     return dict()
+
+
+################################################################################
+
+
+  def getWareGitURL(self,Type,ID,User=None) :
+
+    UserAt = ""
+    if User :
+      UserAt = "%s@" % User
+
+    PortColon = ""
+    Port = self.Config.get("wareshub","gitserver.url-port","")
+    if Port :
+      PortColon = ":%s" % Port
+
+    URL = [ self.Config.get("global","url-protocol"),"://",
+            UserAt,self.Config.get("global","url-host"),PortColon,
+            self.Config.get("wareshub","gitserver.url-path"),"/",
+            Type,"/",ID
+          ]
+    return "".join(URL)
 
 
 ################################################################################
@@ -107,7 +130,7 @@ class WaresOperations :
       return 409,"already exists"
 
     # check if provided json data is correct
-    if not all(name in Definition for name in ("description","users-ro", "users-rw", "mailinglist")) :
+    if not all(name in Definition for name in ("shortdesc","users-ro", "users-rw", "mailinglist")) :
       return 400,"invalid data provided"
 
     os.makedirs(WareGitPath)
@@ -124,7 +147,7 @@ class WaresOperations :
 
     # Creation of the definitoin file
     with open(WareDefFile, 'w') as DefFile:
-      Content = {"description" : Definition["description"],
+      Content = {"shortdesc" : Definition["shortdesc"],
                  "users-ro" : Definition["users-ro"],
                  "users-rw" : Definition["users-rw"],
                  "mailinglist" : Definition["mailinglist"]
@@ -141,6 +164,8 @@ class WaresOperations :
 
 
   def updateWare(self,Type,ID,Definition) :
+
+    # TODO implement updating ware
 
     WareGitPath = self.getWareGitReposPath(Type,ID)
     WareDefPath = self.getWaresDefsPath(Type)
@@ -197,12 +222,45 @@ class WaresOperations :
 ################################################################################
 
 
-  def getWaresInfo(self,Type) :
-    return 501,dict()
+  def getWaresInfo(self,Type,Username) :
+    Infos = dict()
+
+    DefFiles = glob.glob(os.path.join(self.getWaresDefsPath(Type),"*.json"))
+    for File in DefFiles :
+      ID = os.path.splitext(os.path.basename(File))[0]
+      WareGitPath = self.getWareGitReposPath(Type,ID)
+      if os.path.exists(WareGitPath) :
+        with open(File, 'r') as DefFile:
+          Infos[ID] = json.load(DefFile)
+
+      Infos[ID]["git-url"] = self.getWareGitURL(Type,ID,Username)
+
+      GitStatsFilePath = os.path.join(WareGitPath,"wareshub-data","gitstats.json")
+      if os.path.exists(GitStatsFilePath) :
+        with open(GitStatsFilePath, 'r') as StatsFile:
+          Stats = json.load(StatsFile)
+          Infos[ID]["git-branches"] = Stats["branches"]
+          Infos[ID]["open-issues"] = Stats["open-issues"]
+      else :
+        Infos[ID]["git-branches"] = list()
+        Infos[ID]["open-issues"] = {"bugs": 0,"features": 0,"reviews": 0}
+
+    return 200,Infos
 
 
 ################################################################################
 
 
   def getAllWaresInfo(self) :
-    return 501,dict()
+    Infos = dict()
+
+    for Type in Constants.WareTypes :
+      Infos[Type] = list()
+
+      DefFiles = glob.glob(os.path.join(self.getWaresDefsPath(Type),"*.json"))
+      for File in DefFiles :
+        ID = os.path.splitext(os.path.basename(File))[0]
+        if os.path.exists(self.getWareGitReposPath(Type,ID)) :
+          Infos[Type].append(ID)
+
+    return 200,Infos

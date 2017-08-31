@@ -1,5 +1,5 @@
 {
-  "description": "This is simulator 01",
+  "shortdesc": "This is simulator 01",
   "users-ro": [],
   "users-rw": [
     "admin"

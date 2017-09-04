@@ -1,0 +1,216 @@
+html {
+  height: 100%;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  text-align: justify;
+  height: 100%;
+  color: #555;
+}
+
+
+#wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -60px;
+}
+
+#push, #footer {
+  height: 60px;
+}
+
+#footer {
+  background-color: #f7f7f7;
+  color : #555;  
+  border-top: 1px solid #ddd;
+}
+
+.container {
+  width: 970px;
+}
+
+hr.warepage {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-width: 1px 0px 0px;
+}
+
+.navbar {
+  border-radius: 0;
+  background-color: #506076;
+  max-width: none !important;
+  border: 0;
+  -webkit-box-shadow: 0 1px 10px rgba(0, 0, 0, .1);
+  -moz-box-shadow: 0 1px 10px rgba(0, 0, 0, .1);
+  box-shadow: 0 1px 10px rgba(0, 0, 0, .1);
+  /*  box-shadow : 0 .3em .3em rgba( 0, 0, 0, .2);*/
+  min-height: 60px;
+  margin-bottom: 0px;
+  padding-left: 25px;
+  padding-right: 20px;
+  color: #ffffff;
+}
+
+
+.navbar-header {
+  font-size : 190%;
+  padding-top : 10px;
+}
+
+.jumbotron {
+  background-color: #F7F7F7;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #CCCCCC;
+}
+
+div.intro-text {
+  font-size: 110%;  
+}
+
+ul.centered-pills { 
+  display : inline-block;
+  margin-top : 30px;
+  margin-bottom : 20px;
+}
+
+.nav-pills>li {
+  border: 1px solid #8CB04B;
+  border-radius: 4px;
+  margin-right: 25px;
+  margin-left: 25px;
+}
+
+.nav-pills>li>a {
+  color: #768A52;
+  font-weight: bold;
+}
+
+.nav-pills>li.active>a,.nav-pills>li.active,.nav-pills>li.active>a:hover
+  {
+  background-color: #8CB04B;
+  border-radius: 4px;
+}
+
+a.list-group-item.active>.badge,.nav-pills>.active>a>.badge {
+  color: #768A52;
+  background-color: #FFF;
+}
+
+.table>tbody>tr>th {
+  border-top: 0px;
+}
+
+div.mainshortdesc {
+  margin-left: 30px;
+  font-size: 75%;
+}
+
+div.mainopenissues {
+  margin-left: 30px;
+  font-size: 80%;
+}
+
+.panel-commit>.panel-heading {
+  padding: 5px 10px;
+}
+
+.panel-commit>.panel-body {
+  padding: 5px 10px;
+}
+
+.panel-commit>.commit-heading {
+  font-size: 90%;
+  /*color: #777;*/
+}
+
+.commit-author {
+  font-size: 90%;
+}
+
+.branch-star {
+  color : #ffc852;
+}
+
+div.contributors-list {
+  margin-top : 5px;
+  margin-left : 40px;
+}
+
+div.contributor {
+  font-size: 100%;
+  margin-top : 5px;
+  margin-bottom : 5px;
+}
+
+div.branch-tab {
+  padding : 20px;
+}
+
+.label-tag {
+  background-color: #6DC3E4;
+  font-size: 90%;
+}
+
+div.issue-stat {
+  margin-left : 5px;
+  margin-right : 45px;
+  display : inline-block;
+  font-size: 115%;
+}
+
+.issue-stat>.glyphicon {
+  font-size : 125%;
+}
+
+.issue-color-bug {
+  color : #E6603A;
+}
+
+.issue-color-feature {
+  color : #8AD242;
+}
+
+.issue-color-review {
+  color : #42D0D2;
+}
+
+.search-bar {
+  height : 35px;
+}
+
+.input-xsm {
+    height: 25px;
+    padding: 5px 10px;
+    font-size: 11px;
+    line-height: 1.2;
+    border-radius: 3px;
+}
+
+.btn-xsm {
+    height: 25px;
+    padding: 5px 10px;
+    font-size: 11px;
+    line-height: 1.2;
+    border-radius: 3px;
+}
+
+.login-group {
+  padding-top : 10px;
+}
+
+.login-field {
+  margin-top : 10px;  
+}
+
+.login-errormsg {
+  color : #FF6666;
+}
+
+.login-checkbox {
+  margin-top : 10px;
+  font-weight : normal;
+  font-size : 90%;   
+}

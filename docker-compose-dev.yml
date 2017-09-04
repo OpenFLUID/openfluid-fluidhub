@@ -7,9 +7,17 @@ services:
       - FLASK_DEBUG=1
       - PYTHONUNBUFFERED=0
     command: flask run --host=0.0.0.0 -p 3447
+
   wareshub-git:
     environment:
       - FLASK_APP=services/wareshub-git/main.py
       - FLASK_DEBUG=1
       - PYTHONUNBUFFERED=0
     command: flask run --host=0.0.0.0 -p 3448
+
+  wareshub-ui:
+    environment:
+      - FLASK_APP=services/wareshub-ui/main.py
+      - FLASK_DEBUG=1
+      - PYTHONUNBUFFERED=0
+    command: flask run --host=0.0.0.0 -p 3449

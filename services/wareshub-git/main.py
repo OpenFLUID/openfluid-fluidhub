@@ -13,7 +13,7 @@ from flask_httpauth import HTTPBasicAuth
 from fluidhubcommon.WaresOperations import WaresOperations
 from fluidhubcommon import Authnz
 
-from GitInfosManager import GitInfosManager
+from GitInfosWriter import GitInfosWriter
 from GitMailManager import GitMailManager
 
 
@@ -109,8 +109,8 @@ def processGitReceivePack(ware_type,ware_id):
   P.wait()
 
   # Rebuild git info data
-  InfosMan = GitInfosManager(ware_type,ware_id)
-  InfosMan.rebuildInfos()
+  InfosWriter = GitInfosWriter(ware_type,ware_id)
+  InfosWriter.rebuildInfos()
 
   # Send mail to mailing list
   MailMan = GitMailManager(ware_type,ware_id)

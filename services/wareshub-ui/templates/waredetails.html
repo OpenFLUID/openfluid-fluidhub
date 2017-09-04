@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<div class='container'>
+  <br/>
+  <h3>
+    <a href='/{{ FallbackType }}'><span class='glyphicon glyphicon-list'></span>
+    </a>&nbsp;/&nbsp;<a href='/{{ WaresType }}'>{{ WaresType }}</a>&nbsp;/&nbsp;{{ WareID }}
+  </h3>
+  <h4>{{ Def.ShortDesc }}</h4>
+  <br/>
+  <div class='row'>
+    <div class='col-md-6'>
+      {% if WareDoc %}
+      Documentation: <a href=''><span class='glyphicon glyphicon-file'></span>&nbsp;PDF</a><br/>
+      {% endif %}
+      OpenFLUID version(s): <br/>
+      <br/>
+      {% if Committers %}
+        {{ Committers.Count }} contributors :
+        {% for Person in Committers.People %}
+        {% endfor %}
+      {% endif %}
+    </div>
+    <div class='col-md-6'>
+      <div class='panel panel-success'>
+        <div class='panel-heading'>
+          git repository
+        </div>
+        <div class='panel-body'>
+          <b>URL : </b>
+          <input class='' type='text' readonly='readonly' size='40' value='{{ GitURL }}'></input><br/>
+          <br>
+          {% if Def.UsersRO or Def.UsersRW %}
+          <b>Access rights</b>
+          {% if Def.UsersRO %}
+          <li>Read-Only : {% for Username in Def.UsersRO %}{{ Username }}{{ ", " if not loop.last }}{% endfor %}</li>
+          {% endif %}
+          {% if Def.UsersRW %}
+          <li>Read-Write : {% for Username in Def.UsersRW %}{{ Username }}{{ ", " if not loop.last }}{% endfor %}</li>
+          {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class='warepage'>
+  {% if SelectedGitBranch %}
+
+  {% else %}
+  <i>This {{ WaresTypeSingular }} seems to be empty</i>
+  {% endif %}
+</div>
+{% endblock %}

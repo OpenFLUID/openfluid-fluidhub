@@ -9,7 +9,7 @@ import re
 import json
 import shutil
 
-from fluidhubcommon.WaresOperations import WaresOperations
+from fluidhubcommon.GitInfosReader import GitInfosReader
 from fluidhubcommon import Tools
 
 
@@ -17,12 +17,10 @@ from fluidhubcommon import Tools
 ################################################################################
 
 
-class GitInfosManager :
+class GitInfosWriter(GitInfosReader) :
 
   def __init__(self,WareType,WareID) :
-    WaresOps = WaresOperations()
-    self.WarePath = WaresOps.getWareGitReposPath(WareType,WareID)
-    self.WaresHubDataPath = os.path.join(self.WarePath,"wareshub-data")
+    GitInfosReader.__init__(self,WareType,WareID)
 
 
 ################################################################################
@@ -42,9 +40,7 @@ class GitInfosManager :
 
   def generateCommitsHistoryFiles(self,BranchName):
 
-    BranchPath = os.path.join(self.WaresHubDataPath,BranchName)
-
-    Tools.makedirs(BranchPath)
+    Tools.makedirs(self.getGitBranchPath(BranchName))
 
     P = subprocess.Popen(["git","log","--format=%H:::%an:::%ae:::%ad:::%s",BranchName],
                         stdout=subprocess.PIPE,cwd=self.WarePath)
@@ -52,7 +48,7 @@ class GitInfosManager :
 
     CommitsLines = StdOut.splitlines()
 
-    CommitsFile = open(os.path.join(BranchPath,"commits-history.json"),"w")
+    CommitsFile = open(self.getGitBranchHistoryFile(BranchName),"w")
     FirstLine = True
 
     CommitsFile.write("{")
@@ -114,7 +110,7 @@ class GitInfosManager :
 
   def generateGitStatsFile(self,BranchesList):
 
-    GitStatsFile = open(os.path.join(self.WaresHubDataPath,"gitstats.json"),"w")
+    GitStatsFile = open(self.getGitStatsFile(),"w")
 
     # branches
 

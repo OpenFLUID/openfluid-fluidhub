@@ -30,6 +30,15 @@ class WaresOperations :
 ################################################################################
 
 
+  # TODO check if these is useful and/or located in the right class
+  @staticmethod
+  def getGitCurrentVersionBranch() :
+    return "openfluid-"+ConfigManager.get().get("global","openfluid.currentversion","0.0")
+
+
+################################################################################
+
+
   def getWareGitReposPath(self,Type,ID) :
     return os.path.join(self.ReposRootDir,Type,ID)
 
@@ -142,6 +151,12 @@ class WaresOperations :
     P = subprocess.Popen(['git','init','--bare'],cwd=WareGitPath)
     P.wait()
 
+    # TODO setup of the default branch, and maybe default files?
+    #
+    #P = subprocess.Popen(["git","symbolic-ref","-q","HEAD","refs/heads/"+self.getGitCurrentVersionBranch()],
+    #                     cwd=WareGitPath)
+    #P.wait()
+
     if P.returncode :
       return 500,"error while creating git repository"
 
@@ -222,7 +237,7 @@ class WaresOperations :
 ################################################################################
 
 
-  def getWaresInfo(self,Type,Username) :
+  def getWaresInfo(self,Type,Username=None) :
     Infos = dict()
 
     DefFiles = glob.glob(os.path.join(self.getWaresDefsPath(Type),"*.json"))

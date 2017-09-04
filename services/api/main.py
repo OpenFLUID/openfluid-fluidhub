@@ -18,7 +18,6 @@ from fluidhubcommon.WaresOperations import WaresOperations
 
 app = Flask(__name__)
 
-
 tokenAuth = HTTPTokenAuth(scheme='Token')
 
 Config = ConfigManager.get()
@@ -28,6 +27,7 @@ Config = ConfigManager.get()
 ################################################################################
 
 
+# TODO secure with better token system such as jwt
 @tokenAuth.verify_token
 def verify_token(token) :
   if token == AccessToken.get() :

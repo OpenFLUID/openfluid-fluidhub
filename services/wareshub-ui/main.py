@@ -64,8 +64,11 @@ def buildWaresListVars(WareType,WaresInfos,WaresDetails) :
   for Key in sorted(WaresDetails) :
     Infos = dict()
     Infos["ID"] = Key
-    # TODO to be completed
+    # TODO to be completed with versions, etc...
     WaresList.append(Infos)
+
+  # TODO display doc availability
+  # TODO display compatible versions based on git branches
 
   Vars = initTemplateVariables(WareType)
   Vars["WelcText"] = Config.get("wareshub","ui.welctext","no title")
@@ -90,23 +93,27 @@ def Manage404(e):
 ################################################################################
 
 
+@app.errorhandler(500)
+def Manage500(e):
+  Vars = initTemplateVariables(Constants.WareTypes[0])
+  return render_template('500.html',**Vars), 500
+
+
+################################################################################
+
+
 @app.route("/")
-def root():
+def Root():
 
   Code,WaresInfos = WaresOps.getAllWaresInfo()
   if Code != 200 :
-   # TODO manage this better
-   abort(404)
-
-  Code,WaresInfos = WaresOps.getAllWaresInfo()
-  if Code != 200 :
-   # TODO manage this better
-   abort(404)
+    # TODO manage this better
+    abort(500)
 
   Code,WaresDetails = WaresOps.getWaresInfo(Constants.WareTypes[0])
   if Code != 200 :
-   # TODO manage this better
-   abort(404)
+    # TODO manage this better
+    abort(500)
 
 
   Vars = buildWaresListVars(Constants.WareTypes[0],WaresInfos,WaresDetails)
@@ -126,13 +133,13 @@ def GetWares(ware_type):
 
   Code,WaresInfos = WaresOps.getAllWaresInfo()
   if Code != 200 :
-   # TODO manage this better
-   abort(404)
+    # TODO manage this better
+    abort(500)
 
   Code,WaresDetails = WaresOps.getWaresInfo(ware_type)
   if Code != 200 :
-   # TODO manage this better
-   abort(404)
+    # TODO manage this better
+    abort(500)
 
 
   Vars = buildWaresListVars(ware_type,WaresInfos,WaresDetails)
@@ -151,10 +158,13 @@ def GetWare(ware_type,ware_id):
     abort(404)
 
   WareDef = WaresOps.getWareDefinition(ware_type,ware_id)
-
   if not WareDef :
     # TODO manage this better
     abort(404)
+
+  # TODO display compatibility info based on git branches
+  # TODO display contributors
+  # TODO show informations (tags, status, commits, issues) by git branch
 
   Vars = initTemplateVariables(ware_type)
   Vars["WareID"] = ware_id

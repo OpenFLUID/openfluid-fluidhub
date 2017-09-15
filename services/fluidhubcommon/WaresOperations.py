@@ -81,13 +81,15 @@ class WaresOperations :
       UserAt = "%s@" % User
 
     PortColon = ""
-    Port = self.Config.get("wareshub","gitserver.url-port","")
+    Port = self.Config.get("global","url-port","")
     if Port :
       PortColon = ":%s" % Port
 
     URL = [ self.Config.get("global","url-protocol"),"://",
             UserAt,self.Config.get("global","url-host"),PortColon,
-            self.Config.get("wareshub","gitserver.url-path"),"/",
+            self.Config.get("global","url-prefix"),"/",
+            self.Config.get("wareshub","url-prefix"),"/",
+            self.Config.get("wareshub","gitserver.url-prefix"),"/",
             Type,"/",ID
           ]
     return "".join(URL)

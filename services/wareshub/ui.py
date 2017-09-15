@@ -5,7 +5,7 @@ __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 import glob, os
 
-from flask import Flask,render_template,request,abort
+from flask import Blueprint,render_template,request,abort
 
 from fluidhubcommon import ConfigManager
 from fluidhubcommon import Constants
@@ -17,7 +17,9 @@ from fluidhubcommon.WaresOperations import WaresOperations
 ################################################################################
 
 
-app = Flask(__name__,template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)),"templates"))
+wareshubUI = Blueprint('wareshubUI',__name__,
+                       template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)),"templates"),
+                       static_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)),"static"))
 
 Config = ConfigManager.get()
 WaresOps = WaresOperations()
@@ -43,7 +45,7 @@ def buildWaresListVars(WareType,WaresInfos,WaresDetails) :
 
   # TODO check if generated URL is correct
   PortColon = ""
-  Port = Config.get("wareshub","gitserver.url-port","")
+  Port = Config.get("global","url-port","")
   if Port :
     PortColon = ":%s" % Port
 
@@ -84,7 +86,7 @@ def buildWaresListVars(WareType,WaresInfos,WaresDetails) :
 ################################################################################
 
 
-@app.errorhandler(404)
+@wareshubUI.errorhandler(404)
 def Manage404(e):
   Vars = initTemplateVariables(Constants.WareTypes[0])
   return render_template('404.html',**Vars), 404
@@ -93,7 +95,7 @@ def Manage404(e):
 ################################################################################
 
 
-@app.errorhandler(500)
+@wareshubUI.errorhandler(500)
 def Manage500(e):
   Vars = initTemplateVariables(Constants.WareTypes[0])
   return render_template('500.html',**Vars), 500
@@ -102,7 +104,7 @@ def Manage500(e):
 ################################################################################
 
 
-@app.route("/")
+@wareshubUI.route("/")
 def Root():
 
   Code,WaresInfos = WaresOps.getAllWaresInfo()
@@ -124,7 +126,7 @@ def Root():
 ################################################################################
 
 
-@app.route("/<string:ware_type>")
+@wareshubUI.route("/<string:ware_type>")
 def GetWares(ware_type):
 
   if ware_type not in Constants.WareTypes :
@@ -150,7 +152,7 @@ def GetWares(ware_type):
 ################################################################################
 
 
-@app.route("/<string:ware_type>/<string:ware_id>")
+@wareshubUI.route("/<string:ware_type>/<string:ware_id>")
 def GetWare(ware_type,ware_id):
 
   if ware_type not in Constants.WareTypes :
@@ -181,11 +183,3 @@ def GetWare(ware_type,ware_id):
   Vars["SelectedGitBranch"] = request.args.get("branch",None)
 
   return render_template("waredetails.html",**Vars)
-
-
-################################################################################
-################################################################################
-
-
-if __name__ == '__main__':
-  app.run(port=Config.get("wareshub","ui.port"))

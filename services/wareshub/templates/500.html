@@ -5,11 +5,11 @@
   <br/>
   <br/>
   <h1>
-    Oops, 404!
+    Oops, 500!
     <br/>
-    This page does not exist
+    Internal server error
   </h1>
   <br/>
-  <a href='/{{ WaresType }}'>Take me back to the existing world</a>
+  <a href='{{ url_for('wareshubUI.Root') }}'>Take me back where it may works</a>
 </div>
 {% endblock %}

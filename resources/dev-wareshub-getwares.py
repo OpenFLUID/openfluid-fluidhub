@@ -14,7 +14,7 @@ import common
 
 
 def getWare(Type,ID) :
-  URL = "http://127.0.0.1:3447/wares/%s/%s" % (Type,ID)
+  URL = "http://127.0.0.1:3447/api/wares/%s/%s" % (Type,ID)
   Headers = {
      'cache-control': "no-cache",
   }
@@ -33,7 +33,7 @@ def getWares(Type,Username=None) :
   if Username :
     UserArg = "?username=%s" % Username
 
-  URL = "http://127.0.0.1:3447/wares/%s%s" % (Type,UserArg)
+  URL = "http://127.0.0.1:3447/api/wares/%s%s" % (Type,UserArg)
   Headers = {
      'cache-control': "no-cache",
   }
@@ -47,7 +47,7 @@ def getWares(Type,Username=None) :
 
 
 def getAllWares() :
-  URL = "http://127.0.0.1:3447/wares"
+  URL = "http://127.0.0.1:3447/api/wares"
   Headers = {
      'cache-control': "no-cache",
   }

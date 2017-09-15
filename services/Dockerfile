@@ -19,4 +19,4 @@ RUN mkdir -p /data
 
 WORKDIR /app
 
-CMD uwsgi --http-socket :3448 --plugin python --pythonpath services/wareshub-git --enable-threads --wsgi-file services/wareshub-git/main.py --callable app
+CMD uwsgi --http-socket :3447 --plugin python --pythonpath services --enable-threads --wsgi-file services/app.py --callable app

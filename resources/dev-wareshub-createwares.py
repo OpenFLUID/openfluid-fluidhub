@@ -14,7 +14,7 @@ import common
 
 
 def createWare(Type,ID) :
-  URL = "http://127.0.0.1:3447/wares/%s/%s" % (Type,ID)
+  URL = "http://127.0.0.1:3447/api/wares/%s/%s" % (Type,ID)
   Headers = {
      'content-type': "application/json",
      'authorization': "Token %s" % common.AccessToken,

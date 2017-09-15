@@ -5,13 +5,12 @@ __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 import subprocess
 
-from flask import Flask, make_response, request, abort
+from flask import Blueprint, make_response, request, abort
 from StringIO import StringIO
 from dulwich.pack import PackStreamReader
-from flask_httpauth import HTTPBasicAuth
 
 from fluidhubcommon.WaresOperations import WaresOperations
-from fluidhubcommon import Authnz
+from fluidhubcommon.RoutesAuth import basicAuth
 
 from GitInfosWriter import GitInfosWriter
 from GitMailManager import GitMailManager
@@ -21,31 +20,21 @@ from GitMailManager import GitMailManager
 ################################################################################
 
 
-app = Flask(__name__)
-auth = HTTPBasicAuth()
-
 WaresOps = WaresOperations()
 
-
-################################################################################
-################################################################################
-
-
-@auth.verify_password
-def verify_pw(username, password):
-  return Authnz.authenticateUser(username, password)
+wareshubGit = Blueprint('wareshubGit', __name__)
 
 
 ################################################################################
 ################################################################################
 
 
-@app.route('/<string:ware_type>/<string:ware_id>/info/refs')
-@auth.login_required
+@wareshubGit.route('/<string:ware_type>/<string:ware_id>/info/refs')
+@basicAuth.login_required
 def processInfoRefs(ware_type,ware_id):
 
   # Check if user is granted in RO mode for this ware
-  if not WaresOps.isUserGranted(ware_type,ware_id,auth.username(),False) :
+  if not WaresOps.isUserGranted(ware_type,ware_id,basicAuth.username(),False) :
     abort(403)
 
   # Run service
@@ -83,12 +72,12 @@ def processInfoRefs(ware_type,ware_id):
 ################################################################################
 
 
-@app.route('/<string:ware_type>/<string:ware_id>/git-receive-pack', methods=['POST'])
-@auth.login_required
+@wareshubGit.route('/<string:ware_type>/<string:ware_id>/git-receive-pack', methods=['POST'])
+@basicAuth.login_required
 def processGitReceivePack(ware_type,ware_id):
 
   # Check if user is granted in RW mode for this ware
-  if not WaresOps.isUserGranted(ware_type,ware_id,auth.username(),True) :
+  if not WaresOps.isUserGranted(ware_type,ware_id,basicAuth.username(),True) :
     abort(403)
 
   P = subprocess.Popen(['git-receive-pack', '--stateless-rpc',WaresOps.getWareGitReposPath(ware_type,ware_id)],
@@ -122,12 +111,12 @@ def processGitReceivePack(ware_type,ware_id):
 ################################################################################
 
 
-@app.route('/<string:ware_type>/<string:ware_id>/git-upload-pack', methods=['POST'])
-@auth.login_required
+@wareshubGit.route('/<string:ware_type>/<string:ware_id>/git-upload-pack', methods=['POST'])
+@basicAuth.login_required
 def processGitUploadPack(ware_type,ware_id):
 
   # Check if user is granted in RW mode for this ware
-  if not WaresOps.isUserGranted(ware_type,ware_id,auth.username(),True) :
+  if not WaresOps.isUserGranted(ware_type,ware_id,basicAuth.username(),True) :
     abort(403)
 
   P = subprocess.Popen(['git-upload-pack', '--stateless-rpc', WaresOps.getWareGitReposPath(ware_type,ware_id)],
@@ -144,11 +133,3 @@ def processGitUploadPack(ware_type,ware_id):
   P.wait()
 
   return Res
-
-
-################################################################################
-################################################################################
-
-
-if __name__ == '__main__':
-    app.run(port=Config.get("wareshub","gitserver.port"))

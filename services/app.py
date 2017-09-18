@@ -1,4 +1,6 @@
 
+# TODO add python encoding tag in each python file
+
 __license__ = "AGPLv3"
 __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
@@ -29,6 +31,7 @@ app.register_blueprint(wareshubGit,url_prefix='/'+Config.get("wareshub","url-pre
                                                   Config.get("wareshub","gitserver.url-prefix"))
 app.register_blueprint(wareshubUI,url_prefix='/'+Config.get("wareshub","url-prefix")+'/'+
                                                  Config.get("wareshub","ui.url-prefix"))
+
 
 ################################################################################
 ################################################################################

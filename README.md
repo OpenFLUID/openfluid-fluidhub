@@ -19,9 +19,23 @@ FLUIDHUB_DATAPATH=/path/to/data docker-compose up
 
 ## Development
 ```
-FLUIDHUB_DATAPATH=./_data-dev docker-compose -f docker-compose.yml -f docker-compose-dev.yml up
+FLUIDHUB_DATAPATH=./_dev/server/data docker-compose -f docker-compose.yml -f docker-compose-dev.yml up
 ```
 
+### Tests
+
+Required python packages:
+* sh
+* requests
+
+Run the [nosetests](http://nose.readthedocs.io) tool from the source code root directory:
+```
+nosetests
+```
+For a more detailed execution of tests, you can add verbosity and stdout options:
+```
+nosetests --verbosity=3 -s
+```
 
 # References
 

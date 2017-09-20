@@ -2,7 +2,7 @@
 from flask_httpauth import HTTPBasicAuth,HTTPTokenAuth
 
 from fluidhubcommon import AccessToken
-from fluidhubcommon import Authnz
+from fluidhubcommon.UsersManager import UsersMan
 
 
 ################################################################################
@@ -30,4 +30,4 @@ def verify_token(token) :
 
 @basicAuth.verify_password
 def verify_pw(username, password):
-  return Authnz.authenticateUser(username, password)
+  return UsersMan.authenticateUser(username, password)

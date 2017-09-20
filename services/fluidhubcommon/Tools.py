@@ -19,3 +19,14 @@ def makedirs(Path):
       pass
     else:
       raise
+
+
+################################################################################
+
+def noneToEmptyString(Data):
+  Ret = Data
+  for Key in Ret:
+    if Ret[Key] is None:
+      Ret[Key] = ""
+
+  return Ret

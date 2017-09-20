@@ -7,7 +7,7 @@ services:
     image: fluidhub-services
     volumes:
       - ./services:/app/services:ro
-      - ${FLUIDHUB_DATAPATH}/common:/data/common:ro
+      - ${FLUIDHUB_DATAPATH}/common:/data/common:rw
       - ${FLUIDHUB_DATAPATH}/wareshub:/data/wareshub:rw
 #      - ${FLUIDHUB_DATAPATH}/log:/data/log:rw
     environment:

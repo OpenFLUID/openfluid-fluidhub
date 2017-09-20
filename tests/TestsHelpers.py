@@ -27,6 +27,21 @@ Wares = { "simulators" : ["sim.01","sim.02","sim.03"],
           "builderexts" : ["bext.01"]
         }
 
+Users = {
+          "user1" : {
+            "password" : "user1"
+          },
+          "user2" : {
+            "password" : "user2",
+            "fullname" : "User 2"
+          },
+          "user3" : {
+            "password" : "user3",
+            "fullname" : "User 3",
+            "email" : "user3@users.org"
+          }
+        }
+
 
 ################################################################################
 ################################################################################

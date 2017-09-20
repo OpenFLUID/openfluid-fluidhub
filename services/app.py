@@ -11,6 +11,7 @@ from fluidhubcommon import ConfigManager
 
 from api.root import apiRoot
 from api.wares import apiWares
+from api.users import apiUsers
 from wareshub.git import wareshubGit
 from wareshub.ui import wareshubUI
 
@@ -26,6 +27,7 @@ app = Flask(__name__)
 
 app.register_blueprint(apiRoot,url_prefix='/'+Config.get("api","url-prefix"))
 app.register_blueprint(apiWares,url_prefix='/'+Config.get("api","url-prefix"))
+app.register_blueprint(apiUsers,url_prefix='/'+Config.get("api","url-prefix"))
 
 app.register_blueprint(wareshubGit,url_prefix='/'+Config.get("wareshub","url-prefix")+'/'+
                                                   Config.get("wareshub","gitserver.url-prefix"))

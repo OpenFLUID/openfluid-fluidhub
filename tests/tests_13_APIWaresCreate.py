@@ -17,7 +17,8 @@ class tests_APIWaresCreate(unittest.TestCase):
 
   @classmethod
   def setUpClass(cls):
-    pass
+
+    cls.Token = helpers.askForToken("admin","admin")
 
 
   def setUp(self):
@@ -33,7 +34,7 @@ class tests_APIWaresCreate(unittest.TestCase):
     URL = "http://127.0.0.1:3447/api/wares/%s/%s" % (Type,ID)
     Headers = {
      'content-type': "application/json",
-     'authorization': "Token %s" % helpers.AccessToken,
+     'authorization': "JWT %s" % self.Token,
      'cache-control': "no-cache",
     }
 

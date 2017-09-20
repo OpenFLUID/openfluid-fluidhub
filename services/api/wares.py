@@ -3,7 +3,7 @@ __license__ = "AGPLv3"
 __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 
-from flask import Blueprint,jsonify,request
+from flask import Blueprint,jsonify,request,g
 
 from fluidhubcommon import Constants
 from fluidhubcommon.WaresOperations import WaresOperations
@@ -66,6 +66,9 @@ def GetWare(ware_type,ware_id) :
 @tokenAuth.login_required
 def CreateWare(ware_type,ware_id) :
 
+  if g.username != "admin":
+    abort(403)
+
   if ware_type not in Constants.WareTypes :
     return "invalid ware type",404
 
@@ -84,6 +87,9 @@ def CreateWare(ware_type,ware_id) :
 @tokenAuth.login_required
 def UpdateWare(ware_type,ware_id) :
 
+  if g.username != "admin":
+    abort(403)
+
   if ware_type not in Constants.WareTypes :
     return "invalid ware type",404
 
@@ -101,6 +107,9 @@ def UpdateWare(ware_type,ware_id) :
 @apiWares.route('/wares/<string:ware_type>/<string:ware_id>', methods=['DELETE'])
 @tokenAuth.login_required
 def DeleteWare(ware_type,ware_id) :
+
+  if g.username != "admin":
+    abort(403)
 
   if ware_type not in Constants.WareTypes :
     return "invalid ware type",404

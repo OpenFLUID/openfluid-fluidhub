@@ -1,15 +1,20 @@
 
+__license__ = "AGPLv3"
+__author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
+
+
+from flask import Flask, g
 from flask_httpauth import HTTPBasicAuth,HTTPTokenAuth
 
-from fluidhubcommon import AccessToken
 from fluidhubcommon.UsersManager import UsersMan
+from fluidhubcommon.TokenManager import TokenManager
 
 
 ################################################################################
 ################################################################################
 
 
-tokenAuth = HTTPTokenAuth(scheme='Token')
+tokenAuth = HTTPTokenAuth(scheme='JWT')
 basicAuth = HTTPBasicAuth()
 
 
@@ -17,11 +22,13 @@ basicAuth = HTTPBasicAuth()
 ################################################################################
 
 
-# TODO secure with better token system such as jwt
 @tokenAuth.verify_token
 def verify_token(token) :
-  if token == AccessToken.get() :
+  Sub = TokenManager.decode(token)
+  if Sub:
+    g.username = Sub
     return True
+
   return False
 
 

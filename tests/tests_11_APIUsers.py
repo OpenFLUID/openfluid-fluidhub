@@ -17,7 +17,8 @@ class tests_APIUsers(unittest.TestCase):
 
   @classmethod
   def setUpClass(cls):
-    pass
+
+    cls.Token = helpers.askForToken("admin","admin")
 
 
   def setUp(self):
@@ -30,7 +31,7 @@ class tests_APIUsers(unittest.TestCase):
   def CreateUser(self,Username, UserData) :
     Headers = {
      'content-type': "application/json",
-     'authorization': "Token %s" % helpers.AccessToken,
+     'authorization': "JWT %s" % self.Token
     }
 
     URL = "http://127.0.0.1:3447/api/users/registry/%s" % (Username)
@@ -48,7 +49,7 @@ class tests_APIUsers(unittest.TestCase):
   def test01_DeleteUsers(self):
     Headers = {
      'content-type': "application/json",
-     'authorization': "Token %s" % helpers.AccessToken,
+     'authorization': "JWT %s" % self.Token
     }
 
     for Username in helpers.Users.keys():

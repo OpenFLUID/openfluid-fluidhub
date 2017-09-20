@@ -27,6 +27,7 @@ FLUIDHUB_DATAPATH=./_dev/server/data docker-compose -f docker-compose.yml -f doc
 Required python packages:
 * sh
 * requests
+* jwt
 
 Run the [nosetests](http://nose.readthedocs.io) tool from the source code root directory:
 ```

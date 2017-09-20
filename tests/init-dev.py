@@ -24,5 +24,3 @@ if os.path.exists(helpers.DataServerPath) :
 else :
   # Install common data
   shutil.copytree(os.path.join(helpers.TestsPath,"server","data"),helpers.DataServerPath)
-  with open(os.path.join(helpers.DataServerPath,"common","access-token"), "w") as TokenFile:
-    TokenFile.write("%s\n" % helpers.AccessToken)

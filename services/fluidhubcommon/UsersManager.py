@@ -81,8 +81,7 @@ class UsersManager :
 
 
   def createUser(self, Username, Definition) :
-    # TODO check valid chars for username (A-Z,a-z,0-9,.,_, must start with an alphabetic char)
-    # Regex: [a-z][a-z0-9_-]*
+    # check valid chars for username (A-Z,a-z,0-9,.,_, must start with an alphabetic char)
     if not re.match("^[a-z][a-z0-9_-]*$", Username):
       return 400,"invalid username"
 

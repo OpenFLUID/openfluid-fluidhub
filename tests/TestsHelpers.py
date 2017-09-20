@@ -6,6 +6,7 @@ __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 import os
 import requests
 import errno
+import json
 
 
 ################################################################################
@@ -19,8 +20,6 @@ DataServerPath = os.path.join(ServerPath,"data")
 LocalPath = os.path.join(RootPath,"_dev","local")
 LocalWaresPath = os.path.join(LocalPath,"wares")
 
-
-AccessToken = "Bjr0WBcPUiUNwubCX7Kbnnnjl2cq3LZArSbwqKBfNVCvhUxEm6CONukGU4DXoPlE"
 
 Wares = { "simulators" : ["sim.01","sim.02","sim.03"],
           "observers" : ["obs.01","obs.02"],
@@ -90,3 +89,12 @@ def executeDeleteRequest(URL,Headers=dict()):
 def printResponse(Response):
   print Response.url,":",Response.status_code
   print Response.text
+
+
+################################################################################
+
+
+def askForToken(Username,Password):
+  Response = requests.get("http://127.0.0.1:3447/api/users/auth", auth=(Username,Password))
+  JSON = json.loads(Response.text)
+  return JSON['token']

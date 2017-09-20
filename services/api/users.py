@@ -3,10 +3,11 @@ __license__ = "AGPLv3"
 __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 
-from flask import Blueprint,jsonify,request
+from flask import Blueprint,jsonify,request,g
 
 from fluidhubcommon import Constants
 from fluidhubcommon.UsersManager import UsersMan
+from fluidhubcommon.TokenManager import TokenManager
 from fluidhubcommon.RoutesAuth import tokenAuth
 from fluidhubcommon.RoutesAuth import basicAuth
 
@@ -48,6 +49,9 @@ def GetUser(username) :
 @tokenAuth.login_required
 def CreateUser(username) :
 
+  if g.username != "admin":
+    abort(403)
+
   Data = request.get_json(silent=True)
 
   Code, Res = UsersMan.createUser(username,Data)
@@ -61,6 +65,10 @@ def CreateUser(username) :
 @apiUsers.route('/users/registry/<string:username>', methods=['PATCH'])
 @tokenAuth.login_required
 def UpdateUser(username) :
+
+  if g.username != "admin":
+    abort(403)
+
   abort(501)
 
 
@@ -71,6 +79,9 @@ def UpdateUser(username) :
 @tokenAuth.login_required
 def DeleteUser(username) :
 
+  if g.username != "admin":
+    abort(403)
+
   Code,Res = UsersMan.deleteUser(username)
 
   return Res,Code
@@ -79,7 +90,12 @@ def DeleteUser(username) :
 ################################################################################
 
 
-@apiUsers.route('/users/auth', methods=['POST'])
+@apiUsers.route('/users/auth', methods=['GET'])
 @basicAuth.login_required
 def AuthUser() :
-  abort(501)
+  Token = TokenManager.generate(basicAuth.username(),60)
+
+  if Token :
+    return jsonify({ "token" : Token }),200
+
+  return "",500

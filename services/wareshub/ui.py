@@ -7,7 +7,7 @@ import glob, os
 
 from flask import Blueprint,render_template,request,abort
 
-from fluidhubcommon import ConfigManager
+from fluidhubcommon.ConfigManager import ConfigMan
 from fluidhubcommon import Constants
 
 from fluidhubcommon.WaresOperations import WaresOperations
@@ -21,7 +21,6 @@ wareshubUI = Blueprint('wareshubUI',__name__,
                        template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)),"templates"),
                        static_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)),"static"))
 
-Config = ConfigManager.get()
 WaresOps = WaresOperations()
 
 
@@ -33,7 +32,7 @@ def initTemplateVariables(WareType) :
   Vars = dict()
   Vars["WaresType"] = WareType
   Vars["WaresTypeSingular"] = Constants.WareTypesNamesSingular[WareType]
-  Vars["Title"] = Config.get("wareshub","ui.title","no title")
+  Vars["Title"] = ConfigMan.get("wareshub","ui.title","no title")
 
   return Vars
 
@@ -45,12 +44,12 @@ def buildWaresListVars(WareType,WaresInfos,WaresDetails) :
 
   # TODO check if generated URL is correct
   PortColon = ""
-  Port = Config.get("global","url-port","")
+  Port = ConfigMan.get("global","url-port","")
   if Port :
     PortColon = ":%s" % Port
 
-  ClientURL = [ Config.get("global","url-protocol"),"://",
-                Config.get("global","url-host"),PortColon,
+  ClientURL = [ ConfigMan.get("global","url-protocol"),"://",
+                ConfigMan.get("global","url-host"),PortColon,
               ]
 
   WaresCount = len(WaresInfos[WareType])
@@ -73,7 +72,7 @@ def buildWaresListVars(WareType,WaresInfos,WaresDetails) :
   # TODO display compatible versions based on git branches
 
   Vars = initTemplateVariables(WareType)
-  Vars["WelcText"] = Config.get("wareshub","ui.welctext","no title")
+  Vars["WelcText"] = ConfigMan.get("wareshub","ui.welctext","no title")
   Vars["ClientURL"] = "".join(ClientURL)
   Vars["TypesButtons"] = TypesButtons
   Vars["WaresCount"] = WaresCount

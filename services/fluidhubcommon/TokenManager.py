@@ -8,7 +8,7 @@ import jwt
 from datetime import datetime, timedelta
 
 from fluidhubcommon import Constants
-from fluidhubcommon import ConfigManager
+from fluidhubcommon.ConfigManager import ConfigMan
 
 
 ################################################################################
@@ -28,7 +28,7 @@ class TokenManager:
 
     try:
       JWTString = jwt.encode(Payload,
-                             ConfigManager.get().get("global","secret",""),
+                             ConfigMan.get("global","secret",""),
                              algorithm='HS256')
       return JWTString
 
@@ -44,7 +44,7 @@ class TokenManager:
   def decode(Token):
     try:
       Payload = jwt.decode(Token,
-                           ConfigManager.get().get("global","secret",""),
+                           ConfigMan.get("global","secret",""),
                            algorithm='HS256')
       if "sub" in Payload.keys():
         return Payload["sub"]

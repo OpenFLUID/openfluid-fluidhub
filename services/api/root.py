@@ -5,14 +5,7 @@ __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 from flask import Blueprint,jsonify
 
-from fluidhubcommon import ConfigManager
-
-
-################################################################################
-################################################################################
-
-
-Config = ConfigManager.get()
+from fluidhubcommon.ConfigManager import ConfigMan
 
 
 ################################################################################
@@ -29,12 +22,12 @@ apiRoot = Blueprint('apiRoot', __name__)
 def GetRoot(methods=['GET']):
   Capabilities = []
 
-  if Config.getboolean("wareshub","enabled") :
+  if ConfigMan.getboolean("wareshub","enabled") :
     Capabilities.append('wares')
 
   return jsonify({ 'nature' : 'OpenFLUID FluidHub',
-                   'name' : Config.get("global","name"),
-                   'api-version' : Config.get("api","version"),
+                   'name' : ConfigMan.get("global","name"),
+                   'api-version' : ConfigMan.get("api","version"),
                    'capabilities' : Capabilities,
-                   'status' : Config.get("global","status")
+                   'status' : ConfigMan.get("global","status")
                  })

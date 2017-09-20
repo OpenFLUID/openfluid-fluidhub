@@ -9,7 +9,7 @@ import subprocess
 import shutil
 import glob
 
-from fluidhubcommon import ConfigManager
+from fluidhubcommon.ConfigManager import ConfigMan
 from fluidhubcommon import Constants
 
 
@@ -21,10 +21,8 @@ class WaresOperations :
 
   def __init__(self) :
 
-    self.Config = ConfigManager.get()
-
-    self.ReposRootDir = os.path.join(Constants.RootDataPath,self.Config.get("wareshub","gitserver.reposdir"))
-    self.DefsRootDir = os.path.join(Constants.RootDataPath,self.Config.get("wareshub","gitserver.defsdir"))
+    self.ReposRootDir = os.path.join(Constants.RootDataPath,ConfigMan.get("wareshub","gitserver.reposdir"))
+    self.DefsRootDir = os.path.join(Constants.RootDataPath,ConfigMan.get("wareshub","gitserver.defsdir"))
 
 
 ################################################################################
@@ -81,15 +79,15 @@ class WaresOperations :
       UserAt = "%s@" % User
 
     PortColon = ""
-    Port = self.Config.get("global","url-port","")
+    Port = ConfigMan.get("global","url-port","")
     if Port :
       PortColon = ":%s" % Port
 
-    URL = [ self.Config.get("global","url-protocol"),"://",
-            UserAt,self.Config.get("global","url-host"),PortColon,
-            self.Config.get("global","url-prefix"),"/",
-            self.Config.get("wareshub","url-prefix"),"/",
-            self.Config.get("wareshub","gitserver.url-prefix"),"/",
+    URL = [ ConfigMan.get("global","url-protocol"),"://",
+            UserAt,ConfigMan.get("global","url-host"),PortColon,
+            ConfigMan.get("global","url-prefix"),"/",
+            ConfigMan.get("wareshub","url-prefix"),"/",
+            ConfigMan.get("wareshub","gitserver.url-prefix"),"/",
             Type,"/",ID
           ]
     return "".join(URL)

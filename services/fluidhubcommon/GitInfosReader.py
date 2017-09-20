@@ -6,7 +6,7 @@ __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 import os
 
 from fluidhubcommon.WaresOperations import WaresOperations
-from fluidhubcommon import ConfigManager
+from fluidhubcommon.ConfigManager import ConfigMan  #TODO is this necessary?
 
 
 ################################################################################

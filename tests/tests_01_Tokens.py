@@ -6,7 +6,7 @@ __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 import unittest
 import time
 
-from fluidhubcommon.TokenManager import TokenManager
+from FluidHub.TokenManager import TokenManager
 
 import TestsHelpers as helpers
 

@@ -3,7 +3,7 @@ version: "2"
 services:
   fluidhub-app:
     environment:
-      - FLASK_APP=services/app.py
+      - FLASK_APP=/fluidhub/app/main.py
       - FLASK_DEBUG=1
       - PYTHONUNBUFFERED=0
     command: flask run --host=0.0.0.0 -p 3447

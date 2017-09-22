@@ -15,7 +15,7 @@ RUN pip install pyjwt
 RUN pip install nose
 
 
-RUN mkdir -p /app
+RUN mkdir -p /fluidhub
 RUN mkdir -p /tests
 RUN mkdir -p /_dev
 

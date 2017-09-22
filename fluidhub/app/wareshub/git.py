@@ -9,8 +9,8 @@ from flask import Blueprint, make_response, request, abort
 from StringIO import StringIO
 from dulwich.pack import PackStreamReader
 
-from fluidhubcommon.WaresOperations import WaresOperations
-from fluidhubcommon.RoutesAuth import basicAuth
+from FluidHub.WaresOperations import WaresOperations
+from FluidHub.RoutesAuth import basicAuth
 
 from GitInfosWriter import GitInfosWriter
 from GitMailManager import GitMailManager

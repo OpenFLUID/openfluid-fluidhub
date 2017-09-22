@@ -5,11 +5,11 @@ __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 from flask import Blueprint,jsonify,request,g
 
-from fluidhubcommon import Constants
-from fluidhubcommon.UsersManager import UsersMan
-from fluidhubcommon.TokenManager import TokenManager
-from fluidhubcommon.RoutesAuth import tokenAuth
-from fluidhubcommon.RoutesAuth import basicAuth
+from FluidHub import Constants
+from FluidHub.UsersManager import UsersMan
+from FluidHub.TokenManager import TokenManager
+from FluidHub.RoutesAuth import tokenAuth
+from FluidHub.RoutesAuth import basicAuth
 
 
 ################################################################################

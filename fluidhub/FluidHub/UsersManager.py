@@ -7,7 +7,7 @@ from sqlalchemy import create_engine, MetaData, Table
 import bcrypt
 import re
 
-from fluidhubcommon import Tools
+from FluidHub import Tools
 
 
 ################################################################################

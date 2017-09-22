@@ -3,7 +3,7 @@ __license__ = "AGPLv3"
 __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 
-from fluidhubcommon.WaresOperations import WaresOperations
+from FluidHub.WaresOperations import WaresOperations
 
 
 ################################################################################

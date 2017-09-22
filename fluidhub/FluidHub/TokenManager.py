@@ -7,8 +7,8 @@ import os
 import jwt
 from datetime import datetime, timedelta
 
-from fluidhubcommon import Constants
-from fluidhubcommon.ConfigManager import ConfigMan
+from FluidHub import Constants
+from FluidHub.ConfigManager import ConfigMan
 
 
 ################################################################################

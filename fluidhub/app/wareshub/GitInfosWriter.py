@@ -9,8 +9,8 @@ import re
 import json
 import shutil
 
-from fluidhubcommon.GitInfosReader import GitInfosReader
-from fluidhubcommon import Tools
+from FluidHub.GitInfosReader import GitInfosReader
+from FluidHub import Tools
 
 
 ################################################################################

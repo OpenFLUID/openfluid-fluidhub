@@ -3,14 +3,16 @@ version: "2"
 services:
   fluidhub-app:
     build:
-      context: ./services
+      context: .
+      dockerfile: app.Dockerfile
     image: fluidhub-services
     volumes:
-      - ./services:/app/services:ro
+      - ../fluidhub:/fluidhub:ro
       - ${FLUIDHUB_DATAPATH}/common:/data/common:rw
       - ${FLUIDHUB_DATAPATH}/wareshub:/data/wareshub:rw
 #      - ${FLUIDHUB_DATAPATH}/log:/data/log:rw
     environment:
-      - PYTHONPATH=/app/services
+      - PYTHONPATH=/fluidhub
+    command: uwsgi --http-socket :3447 --plugin python --pythonpath /fluidhub --enable-threads --wsgi-file main.py --callable app
     ports:
       - "3447:3447"

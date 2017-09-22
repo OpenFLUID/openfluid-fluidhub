@@ -8,7 +8,7 @@ import os
 import shutil
 from sh import git
 
-from fluidhubcommon import Tools
+from FluidHub import Tools
 
 import TestsHelpers as helpers
 

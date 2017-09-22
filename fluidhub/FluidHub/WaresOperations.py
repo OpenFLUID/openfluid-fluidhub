@@ -9,8 +9,8 @@ import subprocess
 import shutil
 import glob
 
-from fluidhubcommon.ConfigManager import ConfigMan
-from fluidhubcommon import Constants
+from FluidHub.ConfigManager import ConfigMan
+from FluidHub import Constants
 
 
 ################################################################################

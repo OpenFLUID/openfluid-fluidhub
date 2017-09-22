@@ -6,7 +6,7 @@ __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 import os
 import ConfigParser
 
-from fluidhubcommon import Constants
+from FluidHub import Constants
 
 
 ################################################################################

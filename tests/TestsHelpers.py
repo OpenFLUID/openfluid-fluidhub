@@ -25,8 +25,6 @@ FluidhubAddr = "127.0.0.1:3447"
 if "FLUIDHUB_ADDR" in os.environ :
   FluidhubAddr = os.environ["FLUIDHUB_ADDR"]
 
-print FluidhubAddr
-
 
 Wares = { "simulators" : ["sim.01","sim.02","sim.03"],
           "observers" : ["obs.01","obs.02"],

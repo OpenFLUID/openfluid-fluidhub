@@ -5,7 +5,7 @@ __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 from flask import Blueprint,jsonify
 
-from fluidhubcommon.ConfigManager import ConfigMan
+from FluidHub.ConfigManager import ConfigMan
 
 
 ################################################################################

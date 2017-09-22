@@ -3,14 +3,15 @@ version: "2"
 services:
   fluidhub-tests:
     build:
-      context: ./tests
+      context: .
+      dockerfile: tests.Dockerfile
     image: fluidhub-services-tests
     environment:
       - FLUIDHUB_ADDR=fluidhub-app:3447
-      - PYTHONPATH=/app
+      - PYTHONPATH=/fluidhub
     volumes:
-      - ./_dev:/_dev:rw
-      - ./tests:/tests:rw
-      - ./services/fluidhubcommon:/app/fluidhubcommon:ro
+      - ../_dev:/_dev:rw
+      - ../tests:/tests:rw
+      - ../fluidhub/FluidHub:/fluidhub/FluidHub:ro
     links:
       - fluidhub-app

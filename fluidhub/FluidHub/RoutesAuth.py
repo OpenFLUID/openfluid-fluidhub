@@ -6,8 +6,8 @@ __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 from flask import Flask, g
 from flask_httpauth import HTTPBasicAuth,HTTPTokenAuth
 
-from fluidhubcommon.UsersManager import UsersMan
-from fluidhubcommon.TokenManager import TokenManager
+from FluidHub.UsersManager import UsersMan
+from FluidHub.TokenManager import TokenManager
 
 
 ################################################################################

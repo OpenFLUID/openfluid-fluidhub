@@ -7,10 +7,10 @@ import glob, os
 
 from flask import Blueprint,render_template,request,abort
 
-from fluidhubcommon.ConfigManager import ConfigMan
-from fluidhubcommon import Constants
+from FluidHub.ConfigManager import ConfigMan
+from FluidHub import Constants
 
-from fluidhubcommon.WaresOperations import WaresOperations
+from FluidHub.WaresOperations import WaresOperations
 
 
 ################################################################################

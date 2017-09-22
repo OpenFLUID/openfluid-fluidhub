@@ -7,7 +7,7 @@ __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 from flask import Flask
 
-from fluidhubcommon.ConfigManager import ConfigMan
+from FluidHub.ConfigManager import ConfigMan
 
 from api.root import apiRoot
 from api.wares import apiWares

@@ -21,6 +21,13 @@ LocalPath = os.path.join(RootPath,"_dev","local")
 LocalWaresPath = os.path.join(LocalPath,"wares")
 
 
+FluidhubAddr = "127.0.0.1:3447"
+if "FLUIDHUB_ADDR" in os.environ :
+  FluidhubAddr = os.environ["FLUIDHUB_ADDR"]
+
+print FluidhubAddr
+
+
 Wares = { "simulators" : ["sim.01","sim.02","sim.03"],
           "observers" : ["obs.01","obs.02"],
           "builderexts" : ["bext.01"]
@@ -43,19 +50,6 @@ Users = {
 
 
 ################################################################################
-################################################################################
-
-
-def makedirs(Path):
-  try:
-    os.makedirs(Path)
-  except OSError as E:
-    if E.errno == errno.EEXIST and os.path.isdir(Path):
-      pass
-    else:
-      raise
-
-
 ################################################################################
 
 
@@ -95,6 +89,6 @@ def printResponse(Response):
 
 
 def askForToken(Username,Password):
-  Response = requests.get("http://127.0.0.1:3447/api/users/auth", auth=(Username,Password))
+  Response = requests.get("http://%s/api/users/auth" % FluidhubAddr, auth=(Username,Password))
   JSON = json.loads(Response.text)
   return JSON['token']

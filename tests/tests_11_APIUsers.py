@@ -34,7 +34,7 @@ class tests_APIUsers(unittest.TestCase):
      'authorization': "JWT %s" % self.Token
     }
 
-    URL = "http://127.0.0.1:3447/api/users/registry/%s" % (Username)
+    URL = "http://%s/api/users/registry/%s" % (helpers.FluidhubAddr,Username)
     UserData["username"] = Username
     Payload = json.dumps(UserData)
     Response = helpers.executePutRequest(URL, Data=Payload, Headers=Headers)
@@ -53,7 +53,7 @@ class tests_APIUsers(unittest.TestCase):
     }
 
     for Username in helpers.Users.keys():
-      URL = "http://127.0.0.1:3447/api/users/registry/%s" % (Username)
+      URL = "http://%s/api/users/registry/%s" % (helpers.FluidhubAddr,Username)
       Response = helpers.executeDeleteRequest(URL, Headers=Headers)
       helpers.printResponse(Response)
 
@@ -77,13 +77,13 @@ class tests_APIUsers(unittest.TestCase):
 
   def test03_GetUsers(self):
 
-    URL = "http://127.0.0.1:3447/api/users/registry"
+    URL = "http://%s/api/users/registry" % (helpers.FluidhubAddr)
     Response = helpers.executeGetRequest(URL)
     helpers.printResponse(Response)
     self.assertEqual(Response.status_code,200)
 
     for Username in helpers.Users.keys():
-      URL = "http://127.0.0.1:3447/api/users/registry/%s" % Username
+      URL = "http://%s/api/users/registry/%s" % (helpers.FluidhubAddr,Username)
       Response = helpers.executeGetRequest(URL)
       helpers.printResponse(Response)
       self.assertEqual(Response.status_code,200)

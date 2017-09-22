@@ -11,6 +11,6 @@ services:
       - ${FLUIDHUB_DATAPATH}/wareshub:/data/wareshub:rw
 #      - ${FLUIDHUB_DATAPATH}/log:/data/log:rw
     environment:
-      - PYTHONPATH=/app/services/fluidhubcommon:$PYTHONPATH
+      - PYTHONPATH=/app/services
     ports:
       - "3447:3447"

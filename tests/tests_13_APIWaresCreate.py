@@ -31,7 +31,7 @@ class tests_APIWaresCreate(unittest.TestCase):
 
   def createWare(self,Type,ID) :
 
-    URL = "http://127.0.0.1:3447/api/wares/%s/%s" % (Type,ID)
+    URL = "http://%s/api/wares/%s/%s" % (helpers.FluidhubAddr,Type,ID)
     Headers = {
      'content-type': "application/json",
      'authorization': "JWT %s" % self.Token,
@@ -50,7 +50,7 @@ class tests_APIWaresCreate(unittest.TestCase):
 
   def getWare(self,Type,ID) :
 
-    URL = "http://127.0.0.1:3447/api/wares/%s/%s" % (Type,ID)
+    URL = "http://%s/api/wares/%s/%s" % (helpers.FluidhubAddr,Type,ID)
 
     Response = helpers.executeGetRequest(URL)
     helpers.printResponse(Response)
@@ -67,7 +67,7 @@ class tests_APIWaresCreate(unittest.TestCase):
     if Username :
       UserArg = "?username=%s" % Username
 
-    URL = "http://127.0.0.1:3447/api/wares/%s%s" % (Type,UserArg)
+    URL = "http://%s/api/wares/%s%s" % (helpers.FluidhubAddr,Type,UserArg)
 
     Response = helpers.executeGetRequest(URL)
     helpers.printResponse(Response)
@@ -104,7 +104,7 @@ class tests_APIWaresCreate(unittest.TestCase):
 
 
   def test11_GetAllWares(self):
-    Response = helpers.executeGetRequest("http://127.0.0.1:3447/api/wares")
+    Response = helpers.executeGetRequest("http://%s/api/wares" % (helpers.FluidhubAddr))
     helpers.printResponse(Response)
     self.assertEqual(Response.status_code,200)
 

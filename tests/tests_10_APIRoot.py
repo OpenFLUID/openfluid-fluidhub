@@ -28,7 +28,7 @@ class tests_APIRoot(unittest.TestCase):
 
 
   def test_getRoot(self):
-    Response = helpers.executeGetRequest("http://127.0.0.1:3447/api")
+    Response = helpers.executeGetRequest("http://"+helpers.FluidhubAddr+"/api")
     helpers.printResponse(Response)
     self.assertEqual(Response.status_code,200)
 

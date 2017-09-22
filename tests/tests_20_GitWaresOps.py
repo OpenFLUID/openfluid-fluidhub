@@ -8,6 +8,8 @@ import os
 import shutil
 from sh import git
 
+from fluidhubcommon import Tools
+
 import TestsHelpers as helpers
 
 
@@ -37,7 +39,8 @@ class tests_GitWaresOps(unittest.TestCase):
 
 
   def getURL(self,Type,ID,User,Password):
-    return "http://%s:%s@127.0.0.1:3447/wareshub/git/%s/%s" % (User,Password,Type,ID)
+    URL = "http://%s:%s@%s/wareshub/git/%s/%s" % (User,Password,helpers.FluidhubAddr,Type,ID)
+    return URL
 
 
 ################################################################################
@@ -56,7 +59,7 @@ class tests_GitWaresOps(unittest.TestCase):
   def test01_CloneWares(self):
     for Type, IDs in helpers.Wares.iteritems():
       TypePath = self.getLocalPath(Type)
-      helpers.makedirs(TypePath)
+      Tools.makedirs(TypePath)
       for ID in IDs:
         IDPath = self.getLocalPath(Type,ID)
         if os.path.exists(IDPath):

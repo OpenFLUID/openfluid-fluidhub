@@ -1,0 +1,16 @@
+version: "2"
+
+services:
+  fluidhub-tests:
+    build:
+      context: ./tests
+    image: fluidhub-services-tests
+    environment:
+      - FLUIDHUB_ADDR=fluidhub-app:3447
+      - PYTHONPATH=/app
+    volumes:
+      - ./_dev:/_dev:rw
+      - ./tests:/tests:rw
+      - ./services/fluidhubcommon:/app/fluidhubcommon:ro
+    links:
+      - fluidhub-app

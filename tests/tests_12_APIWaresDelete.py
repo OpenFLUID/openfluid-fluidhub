@@ -29,7 +29,7 @@ class tests_APIWaresDelete(unittest.TestCase):
 
 
   def deleteWare(self,Type,ID) :
-    URL = "http://127.0.0.1:3447/api/wares/%s/%s" % (Type,ID)
+    URL = "http://%s/api/wares/%s/%s" % (helpers.FluidhubAddr,Type,ID)
     Headers = {
        'content-type': "application/json",
        'authorization': "JWT %s" % self.Token

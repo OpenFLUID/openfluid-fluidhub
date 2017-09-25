@@ -19,8 +19,8 @@ from FluidHub import Tools
 
 class GitInfosWriter(GitInfosReader) :
 
-  def __init__(self,WareType,WareID) :
-    GitInfosReader.__init__(self,WareType,WareID)
+  def __init__(self,WareType,WareID,WareGitPath) :
+    GitInfosReader.__init__(self,WareType,WareID,WareGitPath)
 
 
 ################################################################################

@@ -254,8 +254,10 @@ class WaresOperations :
       if os.path.exists(GitStatsFilePath) :
         with open(GitStatsFilePath, 'r') as StatsFile:
           Stats = json.load(StatsFile)
-          Infos[ID]["git-branches"] = Stats["branches"]
-          Infos[ID]["open-issues"] = Stats["open-issues"]
+          if "branches" in Stats:
+            Infos[ID]["git-branches"] = Stats["branches"]
+          if "open-issues" in Stats:
+            Infos[ID]["open-issues"] = Stats["open-issues"] # FIXME
       else :
         Infos[ID]["git-branches"] = list()
         Infos[ID]["open-issues"] = {"bugs": 0,"features": 0,"reviews": 0}

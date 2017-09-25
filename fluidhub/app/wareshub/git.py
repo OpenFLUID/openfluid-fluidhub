@@ -12,7 +12,7 @@ from dulwich.pack import PackStreamReader
 from FluidHub.WaresOperations import WaresOperations
 from FluidHub.RoutesAuth import basicAuth
 
-from GitInfosWriter import GitInfosWriter
+from FluidHub.GitInfosWriter import GitInfosWriter
 from GitMailManager import GitMailManager
 
 
@@ -98,7 +98,7 @@ def processGitReceivePack(ware_type,ware_id):
   P.wait()
 
   # Rebuild git info data
-  InfosWriter = GitInfosWriter(ware_type,ware_id)
+  InfosWriter = GitInfosWriter(ware_type,ware_id,WaresOps.getWareGitReposPath(ware_type,ware_id))
   InfosWriter.rebuildInfos()
 
   # Send mail to mailing list

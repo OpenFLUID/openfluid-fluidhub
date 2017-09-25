@@ -15,9 +15,9 @@ from FluidHub.ConfigManager import ConfigMan  #TODO is this necessary?
 
 class GitInfosReader() :
 
-  def __init__(self,WareType,WareID) :
+  def __init__(self,WareType,WareID,WareGitPath) :
     WaresOps = WaresOperations()
-    self.WarePath = WaresOps.getWareGitReposPath(WareType,WareID)
+    self.WarePath = WareGitPath
     self.WaresHubDataPath = os.path.join(self.WarePath,"wareshub-data")
 
 

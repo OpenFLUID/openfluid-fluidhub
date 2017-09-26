@@ -113,17 +113,17 @@ def CheckCredentials():
   if g.LoginF.validate_on_submit() :
     if  g.LoginF.Signin.data :
       # Manage signin submit
-      print "signin submitted"
       if UsersMan.authenticateUser(g.LoginF.Username.data,g.LoginF.Password.data) :
-        session["usertoken"] = TokenManager.generate(g.LoginF.Username.data,10)
+        session["usertoken"] = TokenManager.generate(g.LoginF.Username.data,ConfigMan.getint("ui","tokenexp"))
         session["username"] = g.LoginF.Username.data
         Code,Infos = UsersMan.getUser(g.LoginF.Username.data)
         session["fullname"] = Infos["fullname"]
+        if not len(session["fullname"]):
+          session["fullname"] = session["username"]
       else:
         g.LoginErrMsg = "invalid login"
     elif g.LoginF.Signout.data :
       # Manage signout submit
-      print "signout submitted"
       session.pop('username', None)
       session.pop('fullname', None)
       session.pop('usertoken', None)

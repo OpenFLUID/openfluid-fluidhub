@@ -22,8 +22,7 @@ from wareshub.ui import wareshubUI
 
 app = Flask(__name__)
 
-
-app.config['SECRET_KEY'] = "ground control to major Tom"
+app.config['SECRET_KEY'] = ConfigMan.get("global","secret","")
 
 
 app.register_blueprint(apiRoot,url_prefix='/'+ConfigMan.get("api","url-prefix"))

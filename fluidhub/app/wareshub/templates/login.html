@@ -9,7 +9,7 @@
   </form>
 {% else %}
 <div class='navbar-form navbar-right'>
-  {% if g.LoginErrMsg %}<span class='login-errormsg'>{{ g.LoginErrMsg }}</span>&nbsp;&nbsp;{% endif %}
+  {% if g.LoginErrMsg %}<span class='login-errormsg'>{{ g.LoginErrMsg }}</span>&nbsp;&nbsp;&nbsp;{% endif %}
   <button type='button' class='btn btn-default navbar-btn btn-xsm' data-container='body' data-toggle='login-popover' data-placement='bottom'>Sign in</button>
   <div id='login-popover-content-wrapper' style='display: none'>
     <form role='form' method='post'>

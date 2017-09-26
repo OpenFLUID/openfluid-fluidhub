@@ -1,0 +1,34 @@
+{% macro login_box(Form) %}
+{% if session['username'] %}
+  <form class='navbar-form navbar-right' role='form' method='post'>
+    <div class='form-group login-group'>
+      {{ Form.csrf_token }}
+      <span class='glyphicon glyphicon-user'></span>&nbsp;&nbsp;{{ session["fullname"] }}&nbsp;&nbsp;&nbsp;
+      {{ Form.Signout(class="btn btn-default btn-xsm") }}
+    </div>
+  </form>
+{% else %}
+<div class='navbar-form navbar-right'>
+  {% if g.LoginErrMsg %}<span class='login-errormsg'>{{ g.LoginErrMsg }}</span>&nbsp;&nbsp;{% endif %}
+  <button type='button' class='btn btn-default navbar-btn btn-xsm' data-container='body' data-toggle='login-popover' data-placement='bottom'>Sign in</button>
+  <div id='login-popover-content-wrapper' style='display: none'>
+    <form role='form' method='post'>
+      <div class='form-group'>
+        {{ Form.csrf_token }}
+        {{ Form.Username(size=20,class="form-control input-sm",placeholder=Form.Username.label.text) }}
+        {{ Form.Password(size=20,class="form-control input-sm login-field",placeholder=Form.Password.label.text) }}
+      </div>
+      {{ Form.Signin(class="btn btn-default btn-xsm") }}
+    </form>
+  </div>
+  <script>
+    $('button[data-toggle=login-popover]').popover({
+      html : true,
+      content: function() {
+        return $('#login-popover-content-wrapper').html();
+      }
+    });
+  </script>
+  </div>
+{% endif %}
+{% endmacro %}

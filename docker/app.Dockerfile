@@ -10,6 +10,7 @@ RUN pip install --upgrade pip
 
 RUN pip install flask
 RUN pip install Flask-HTTPAuth
+RUN pip install Flask-WTF
 RUN pip install dulwich
 RUN pip install sqlalchemy
 RUN pip install pyjwt

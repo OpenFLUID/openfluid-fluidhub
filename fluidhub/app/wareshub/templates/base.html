@@ -1,3 +1,4 @@
+{% from "login.html" import login_box %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -22,7 +23,7 @@
       <nav class='navbar navbar-topmenu' role='navigation'>
         <div class='container'>
           <div class='navbar-header'>{{ Title }}</div>
-          <div class=''>{{ LoginBox }}</div>
+          <div class=''>{{ login_box(g.LoginF) }}</div>
         </div>
       </nav>
       {% block content %}{% endblock %}

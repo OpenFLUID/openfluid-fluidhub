@@ -237,30 +237,31 @@ class WaresOperations :
 ################################################################################
 
 
-  def getWaresInfo(self,Type,Username=None) :
+  def getWaresInfo(self,Type,Username=None,Filter=None) :
     Infos = dict()
 
     DefFiles = glob.glob(os.path.join(self.getWaresDefsPath(Type),"*.json"))
     for File in DefFiles :
       ID = os.path.splitext(os.path.basename(File))[0]
-      WareGitPath = self.getWareGitReposPath(Type,ID)
-      if os.path.exists(WareGitPath) :
-        with open(File, 'r') as DefFile:
-          Infos[ID] = json.load(DefFile)
+      if not Filter or (Filter in ID) :
+        WareGitPath = self.getWareGitReposPath(Type,ID)
+        if os.path.exists(WareGitPath) :
+          with open(File, 'r') as DefFile:
+            Infos[ID] = json.load(DefFile)
 
-      Infos[ID]["git-url"] = self.getWareGitURL(Type,ID,Username)
+        Infos[ID]["git-url"] = self.getWareGitURL(Type,ID,Username)
 
-      GitStatsFilePath = os.path.join(WareGitPath,"wareshub-data","gitstats.json")
-      if os.path.exists(GitStatsFilePath) :
-        with open(GitStatsFilePath, 'r') as StatsFile:
-          Stats = json.load(StatsFile)
-          if "branches" in Stats:
-            Infos[ID]["git-branches"] = Stats["branches"]
-          if "open-issues" in Stats:
-            Infos[ID]["open-issues"] = Stats["open-issues"] # FIXME
-      else :
-        Infos[ID]["git-branches"] = list()
-        Infos[ID]["open-issues"] = {"bugs": 0,"features": 0,"reviews": 0}
+        GitStatsFilePath = os.path.join(WareGitPath,"wareshub-data","gitstats.json")
+        if os.path.exists(GitStatsFilePath) :
+          with open(GitStatsFilePath, 'r') as StatsFile:
+            Stats = json.load(StatsFile)
+            if "branches" in Stats:
+              Infos[ID]["git-branches"] = Stats["branches"]
+            if "open-issues" in Stats:
+              Infos[ID]["open-issues"] = Stats["open-issues"]
+        else :
+          Infos[ID]["git-branches"] = list()
+          Infos[ID]["open-issues"] = {"bugs": 0,"features": 0,"reviews": 0}
 
     return 200,Infos
 
@@ -268,7 +269,7 @@ class WaresOperations :
 ################################################################################
 
 
-  def getAllWaresInfo(self) :
+  def getAllWaresInfo(self,Filter=None) :
     Infos = dict()
 
     for Type in Constants.WareTypes :
@@ -277,7 +278,8 @@ class WaresOperations :
       DefFiles = glob.glob(os.path.join(self.getWaresDefsPath(Type),"*.json"))
       for File in DefFiles :
         ID = os.path.splitext(os.path.basename(File))[0]
-        if os.path.exists(self.getWareGitReposPath(Type,ID)) :
-          Infos[Type].append(ID)
+        if not Filter or (Filter in ID) :
+          if os.path.exists(self.getWareGitReposPath(Type,ID)) :
+            Infos[Type].append(ID)
 
     return 200,Infos

@@ -23,11 +23,11 @@
   {% if WaresCount is equalto 0 %}
   <i>There is no {{ WaresTypeSingular }} available</i>
   {% else %}
-  <form class='form-inline pull-right search-bar' role='form'>
+  <form class='form-inline pull-right search-bar' role='form' method='POST'>
     <div class='form-group'>
-      <input type='text' class='form-control input-sm' id='search' name='search' placeholder='Searched terms'>
-      <button type='submit' class='btn btn-default btn-sm'>Search</button>
-      <input type='hidden' name='waretype' value='{{ WareType }}'>
+      {{ SearchF.csrf_token }}
+      {{ SearchF.Terms(size=20,class="form-control input-sm",placeholder=SearchF.Terms.label.text) }}
+      {{ SearchF.Search(class="btn btn-default btn-sm") }}
     </div>
   </form>
 </div>
@@ -38,7 +38,7 @@
       <th width='20%'>Doc</th>
       <th>OpenFLUID compatibility</th>
     </tr>
-    {% for Ware in WaresList %}
+    {% for Ware in WaresList if not SearchF.Terms.data or SearchF.Terms.data in Ware.ID %}
     <tr>
       <td width='60%'><a href='{{ WaresType }}/{{ Ware.ID }}'>{{ Ware.ID }}</a></td>
       <td width='20%'></td>
@@ -48,5 +48,4 @@
   </table>
   {% endif %}
 </div>
-
 {% endblock %}

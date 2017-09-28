@@ -3,8 +3,8 @@
 <div class='container'>
   <br/>
   <h3>
-    <a href='{{ url_for('wareshubUI.GetWares') }}'><span class='glyphicon glyphicon-list'></span>
-    </a>&nbsp;/&nbsp;<a href='{{ url_for('wareshubUI.GetWares',ware_type=WaresType) }}'>{{ WaresType }}</a>&nbsp;/&nbsp;{{ WareID }}
+    <a href='{{ url_for('.GetWares') }}'><span class='glyphicon glyphicon-list'></span>
+    </a>&nbsp;/&nbsp;<a href='{{ url_for('.GetWares',ware_type=WaresType) }}'>{{ WaresType }}</a>&nbsp;/&nbsp;{{ WareID }}
   </h3>
   <h4>{{ Def.ShortDesc }}</h4>
   <br/>

@@ -13,7 +13,7 @@ from api.root import apiRoot
 from api.wares import apiWares
 from api.users import apiUsers
 from wareshub.git import wareshubGit
-from wareshub.ui import wareshubUI
+from ui.ui import ui
 
 
 ################################################################################
@@ -31,8 +31,7 @@ app.register_blueprint(apiUsers,url_prefix='/'+ConfigMan.get("api","url-prefix")
 
 app.register_blueprint(wareshubGit,url_prefix='/'+ConfigMan.get("wareshub","url-prefix")+'/'+
                                                   ConfigMan.get("wareshub","gitserver.url-prefix"))
-app.register_blueprint(wareshubUI,url_prefix='/'+ConfigMan.get("wareshub","url-prefix")+'/'+
-                                                 ConfigMan.get("wareshub","ui.url-prefix"))
+app.register_blueprint(ui,url_prefix='/'+ConfigMan.get("ui","url-prefix"))
 
 
 ################################################################################

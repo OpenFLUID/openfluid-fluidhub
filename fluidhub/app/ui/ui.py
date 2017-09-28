@@ -38,9 +38,9 @@ class LoginForm(FlaskForm):
 ################################################################################
 
 
-wareshubUI = Blueprint('wareshubUI',__name__,
-                       template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)),"templates"),
-                       static_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)),"static"))
+ui = Blueprint('ui',__name__,
+               template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)),"templates"),
+               static_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)),"static"))
 
 WaresOps = WaresOperations()
 
@@ -53,7 +53,8 @@ def initTemplateVariables(WareType) :
   Vars = dict()
   Vars["WaresType"] = WareType
   Vars["WaresTypeSingular"] = Constants.WareTypesNamesSingular[WareType]
-  Vars["Title"] = ConfigMan.get("wareshub","ui.title","no title")
+  Vars["Title"] = ConfigMan.get("ui","title","no title")
+  Vars["WelcText"] = ConfigMan.get("ui","welctext","no text")
 
   return Vars
 
@@ -93,7 +94,6 @@ def buildWaresListVars(WareType,WaresInfos,WaresDetails) :
   # TODO display compatible versions based on git branches
 
   Vars = initTemplateVariables(WareType)
-  Vars["WelcText"] = ConfigMan.get("wareshub","ui.welctext","no title")
   Vars["ClientURL"] = "".join(ClientURL)
   Vars["TypesButtons"] = TypesButtons
   Vars["WaresCount"] = WaresCount
@@ -106,7 +106,7 @@ def buildWaresListVars(WareType,WaresInfos,WaresDetails) :
 ################################################################################
 
 
-@wareshubUI.before_request
+@ui.before_request
 def CheckCredentials():
 
   g.LoginF = LoginForm()
@@ -146,7 +146,7 @@ def CheckCredentials():
 ################################################################################
 
 
-@wareshubUI.errorhandler(404)
+@ui.errorhandler(404)
 def Manage404(e):
   Vars = initTemplateVariables(Constants.WareTypes[0])
   return render_template('404.html',**Vars), 404
@@ -155,7 +155,7 @@ def Manage404(e):
 ################################################################################
 
 
-@wareshubUI.errorhandler(500)
+@ui.errorhandler(500)
 def Manage500(e):
   Vars = initTemplateVariables(Constants.WareTypes[0])
   return render_template('500.html',**Vars), 500
@@ -164,8 +164,8 @@ def Manage500(e):
 ################################################################################
 
 
-@wareshubUI.route("/",defaults={'ware_type':Constants.WareTypes[0]},methods=['GET','POST'])
-@wareshubUI.route("/<string:ware_type>",methods=['GET','POST'])
+@ui.route("/wareshub",defaults={'ware_type':Constants.WareTypes[0]},methods=['GET','POST'])
+@ui.route("/wareshub/<string:ware_type>",methods=['GET','POST'])
 def GetWares(ware_type):
 
   SearchF = SearchForm()
@@ -198,7 +198,7 @@ def GetWares(ware_type):
 ################################################################################
 
 
-@wareshubUI.route("/<string:ware_type>/<string:ware_id>",methods=['GET','POST'])
+@ui.route("/wareshub/<string:ware_type>/<string:ware_id>",methods=['GET','POST'])
 def GetWare(ware_type,ware_id):
 
 

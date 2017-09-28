@@ -10,7 +10,7 @@
         <ul class='nav nav-pills centered-pills'>
           {% for Type in TypesButtons %}
           <li{% if Type.Active %} class='active'{% endif %}>
-            <a href='{{ Type.Name }}'>{{ Type.Title }}&nbsp;<span class='badge'>{{ Type.Count }}</span></a>
+            <a href='{{ url_for('.GetWares',ware_type=Type.Name) }}'>{{ Type.Title }}&nbsp;<span class='badge'>{{ Type.Count }}</span></a>
           </li>
           {% endfor %}
         </ul>

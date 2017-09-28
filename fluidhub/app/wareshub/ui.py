@@ -4,6 +4,7 @@ __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 
 import glob, os
+import hashlib
 
 from flask import Blueprint,render_template,request,abort,session,g
 from flask_wtf import FlaskForm
@@ -118,6 +119,8 @@ def CheckCredentials():
         session["username"] = g.LoginF.Username.data
         Code,Infos = UsersMan.getUser(g.LoginF.Username.data)
         session["fullname"] = Infos["fullname"]
+        session["email"] = Infos["email"]
+        session["gravatarid"] = hashlib.md5(Infos["email"].lower()).hexdigest()
         if not len(session["fullname"]):
           session["fullname"] = session["username"]
       else:
@@ -127,6 +130,8 @@ def CheckCredentials():
       session.pop('username', None)
       session.pop('fullname', None)
       session.pop('usertoken', None)
+      session.pop('email', None)
+      session.pop('gravatarid', None)
 
   # check token validity
   if "usertoken" in session and not TokenManager.decode(session["usertoken"]) :
@@ -134,6 +139,8 @@ def CheckCredentials():
     session.pop('username', None)
     session.pop('fullname', None)
     session.pop('usertoken', None)
+    session.pop('email', None)
+    session.pop('gravatarid', None)
 
 
 ################################################################################

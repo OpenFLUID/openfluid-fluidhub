@@ -40,7 +40,7 @@
     </tr>
     {% for Ware in WaresList if not SearchF.Terms.data or SearchF.Terms.data in Ware.ID %}
     <tr>
-      <td width='60%'><a href='{{ WaresType }}/{{ Ware.ID }}'>{{ Ware.ID }}</a></td>
+      <td width='60%'><a href='{{ url_for('.GetWare',ware_type=WaresType,ware_id=Ware.ID) }}'>{{ Ware.ID }}</a></td>
       <td width='20%'></td>
       <td></td>
     </tr>

@@ -5,7 +5,7 @@ __license__ = "AGPLv3"
 __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 
-from flask import Flask
+from flask import Flask,redirect,url_for
 
 from FluidHub.ConfigManager import ConfigMan
 
@@ -32,6 +32,16 @@ app.register_blueprint(apiUsers,url_prefix='/'+ConfigMan.get("api","url-prefix")
 app.register_blueprint(wareshubGit,url_prefix='/'+ConfigMan.get("wareshub","url-prefix")+'/'+
                                                   ConfigMan.get("wareshub","gitserver.url-prefix"))
 app.register_blueprint(ui,url_prefix='/'+ConfigMan.get("ui","url-prefix"))
+
+
+################################################################################
+################################################################################
+
+
+@app.route("/")
+def Root():
+  return redirect(url_for('ui.Root'))
+
 
 
 ################################################################################

@@ -18,4 +18,4 @@ fi
 
 
 mkdir -p $DATA_PATH
-cp -R resources/server $DATA_PATH/
+cp -R resources/server-init $DATA_PATH/server

@@ -22,7 +22,7 @@ From the root of the source tree, use the `prod-init` wrapper script, with the p
 ```
 ./prod-init /path/to/data
 ```
-
+**YOU ARE REALLY ENCOURAGED TO CHANGE THE DEFAULT SECRET VALUE IN the `common/local.conf` FILE LOCATED IN YOUR DATA DIRECTORY**
 
 ## Build
 
@@ -52,6 +52,10 @@ You can also use the docker-compose command directly:
 ```
 FLUIDHUB_DATAPATH=/path/to/data docker-compose -f docker/docker-compose.yml up
 ```
+
+The only username available at first launch is the Adminsitrator with username `admin` and password `admin`.  
+**YOU ARE REALLY ENCOURAGED TO CHANGE THE `admin` PASSWORD AT FIRST LAUNCH**
+
 
 ## Deploy through frontend
 

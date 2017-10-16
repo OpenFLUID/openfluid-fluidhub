@@ -6,7 +6,7 @@ __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 import glob, os
 import hashlib
 
-from flask import Blueprint,render_template,url_for,redirect,session,g
+from flask import Blueprint,render_template,url_for,redirect,session,g,flash,abort
 from flask_wtf import FlaskForm
 from wtforms import StringField,PasswordField,BooleanField,SubmitField
 
@@ -16,6 +16,8 @@ from FluidHub.TokenManager import TokenManager
 from FluidHub import Constants
 
 import uiCommon
+import uiHome
+import uiAdmin
 import uiWareshub
 
 
@@ -47,6 +49,7 @@ ui = Blueprint('ui',__name__,
 @ui.before_request
 def CheckCredentials():
 
+  g.IsAdmin = False
   g.LoginF = LoginForm()
 
   if g.LoginF.validate_on_submit() :
@@ -62,7 +65,7 @@ def CheckCredentials():
         if not len(session["fullname"]):
           session["fullname"] = session["username"]
       else:
-        g.LoginErrMsg = "invalid login"
+        flash("invalid login")
     elif g.LoginF.Signout.data :
       # Manage signout submit
       session.pop('username', None)
@@ -73,12 +76,15 @@ def CheckCredentials():
 
   # check token validity
   if "usertoken" in session and not TokenManager.decode(session["usertoken"]) :
-    g.LoginErrMsg = "invalid or expired credentials"
+    flash("invalid or expired credentials")
     session.pop('username', None)
     session.pop('fullname', None)
     session.pop('usertoken', None)
     session.pop('email', None)
     session.pop('gravatarid', None)
+
+  if "usertoken" in session and "username" in session and UsersMan.isAdmin(session["username"]) :
+    g.IsAdmin = True
 
 
 ################################################################################
@@ -102,22 +108,62 @@ def Manage500(e):
 ################################################################################
 
 
-@ui.route("/",methods=['GET'])
-def Root():
-  return redirect(url_for('.GetWares'))
+@ui.route("/",methods=['GET','POST'])
+def Home():
+  return uiHome.render()
 
 
 ################################################################################
 
 
-@ui.route("/wareshub",defaults={'ware_type':Constants.WareTypes[0]},methods=['GET','POST'])
+@ui.route("/admin",methods=['GET','POST'])
+def AdminHome():
+  if not g.IsAdmin:
+    return redirect(url_for(".Home"))
+
+  return uiAdmin.renderAdminHome()
+
+
+################################################################################
+
+
+@ui.route("/admin/users",methods=['GET','POST'])
+def AdminUsersList():
+  if not g.IsAdmin:
+    return redirect(url_for(".Home"))
+
+  return uiAdmin.renderAdminUsersList()
+
+
+################################################################################
+
+
+@ui.route("/admin/users/<username>",methods=['GET','POST'])
+def AdminUserDetails(username):
+  if not g.IsAdmin:
+    return redirect(url_for(".Home"))
+
+  return uiAdmin.renderAdminUserDetails(username)
+
+
+################################################################################
+
+
+@ui.route("/wareshub",methods=['GET','POST'])
+def WaresHome():
+  return uiWareshub.renderWaresHome()
+
+
+################################################################################
+
+
 @ui.route("/wareshub/<string:ware_type>",methods=['GET','POST'])
-def GetWares(ware_type):
+def WaresList(ware_type):
   return uiWareshub.renderWaresList(ware_type)
 
 ################################################################################
 
 
 @ui.route("/wareshub/<string:ware_type>/<string:ware_id>",methods=['GET','POST'])
-def GetWare(ware_type,ware_id):
+def WareDetails(ware_type,ware_id):
   return uiWareshub.renderWareDetails(ware_type,ware_id)

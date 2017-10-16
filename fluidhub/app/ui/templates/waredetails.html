@@ -1,11 +1,59 @@
 {% extends "base.html" %}
 {% block content %}
 <div class='container'>
-  <br/>
-  <h3>
-    <a href='{{ url_for('.GetWares') }}'><span class='glyphicon glyphicon-list'></span>
-    </a>&nbsp;/&nbsp;<a href='{{ url_for('.GetWares',ware_type=WaresType) }}'>{{ WaresType }}</a>&nbsp;/&nbsp;{{ WareID }}
-  </h3>
+  {% if g.IsAdmin %}
+  <!-- Admin buttons -->
+  <div class="btn-group" role="group" aria-label="AdminButtons">
+    <button type="button" class="btn btn-danger btn-xsm" data-toggle="modal" data-target="#EditModal">Update</button>
+    <button type="button" class="btn btn-danger btn-xsm" data-toggle="modal" data-target="#DelModal">Delete</button>
+  </div>
+  <!-- Edit modal -->
+  <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="EditModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="EditModalLabel">Update {{ WaresTypeSingular }} <strong>{{ WareID }}</strong></h4>
+        </div>
+        <form role='form' method='post'>
+          <div class='modal-body form-group'>
+            {{ UpdF.csrf_token }}
+            {{ UpdF.ShortDesc.label.text }}: {{ UpdF.ShortDesc(class="form-control input-sm") }}<br/>
+            {{ UpdF.UsersRO.label.text }}: {{ UpdF.UsersRO(size=30,class="form-control input-sm") }}<br/>
+            {{ UpdF.UsersRW.label.text }}:{{ UpdF.UsersRW(size=30,class="form-control input-sm") }}<br/>
+            {{ UpdF.MailingList.label.text }}:{{ UpdF.MailingList(size=30,class="form-control input-sm") }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-xsm" data-dismiss="modal">Cancel</button>
+            {{ UpdF.SubmitUpdate(class="btn btn-default btn-xsm") }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Delete modal -->
+  <div class="modal fade" id="DelModal" tabindex="-1" role="dialog" aria-labelledby="DelModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="DelModalLabel">Delete {{ WaresTypeSingular }}</h4>
+        </div>
+        <form role='form' method='post'>
+          <div class='modal-body form-group'>
+            {{ DelF.csrf_token }}
+            <p class="text-danger">Please, type in the {{ WaresTypeSingular }} ID to confirm the definitive deletion:</p>
+            {{ DelF.ID(size=20,class="form-control input-sm alert-danger") }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-xsm" data-dismiss="modal">Cancel</button>
+            {{ DelF.SubmitDelete(class="btn btn-default btn-xsm") }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
   <h4>{{ Def.ShortDesc }}</h4>
   <br/>
   <div class='row'>

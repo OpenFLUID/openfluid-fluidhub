@@ -26,8 +26,8 @@ class tests_GitWaresOps(unittest.TestCase):
       "sim.02" : "admin",
       "sim.03" : "admin",
       "obs.01" : "admin",
-      "obs.02" : "user2",
-      "bext.01" : "admin"
+      "obs.02" : "paul",
+      "bext.01" : "george"
     }
 
 

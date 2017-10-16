@@ -5,6 +5,7 @@ __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 import os
 import errno
+import re
 
 
 ################################################################################
@@ -31,3 +32,45 @@ def noneToEmptyString(Data):
       Ret[Key] = ""
 
   return Ret
+
+
+################################################################################
+
+
+def isValidUsername(Username) :
+  return re.match("^[a-z][a-z0-9]*$", Username)
+
+
+################################################################################
+
+
+def isValidEmail(Email) :
+  return re.match("^[\w.\-_]*\@\w[\w.\-_]*$", Email)
+
+
+################################################################################
+
+
+def isValidEmail(Email) :
+  return re.match("^[\w.\-_]*\@\w[\w.\-_]*$", Email)
+
+
+################################################################################
+
+
+def getAsValidList(Str,ValidFunc,WildcardOK=False,Sep=","):
+  Lst = Str.split(Sep)
+  ValidLst = list()
+
+  for Item in Lst:
+    Item = Item.strip(" ")
+
+    if (WildcardOK and Item == "*") :
+      ValidLst.append(Item)
+    elif Item:
+      if ValidFunc(Item):
+        ValidLst.append(Item)
+      else:
+        return None
+
+  return ValidLst

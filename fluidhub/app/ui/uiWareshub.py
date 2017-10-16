@@ -3,12 +3,13 @@ __license__ = "AGPLv3"
 __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 
-from flask import render_template,request,abort,session
+from flask import render_template,request,abort,session,url_for,g,redirect,flash,get_flashed_messages
 from flask_wtf import FlaskForm
-from wtforms import StringField,SubmitField
+from wtforms import StringField,SubmitField,TextAreaField
 from wtforms.validators import DataRequired
 
 from FluidHub import Constants
+from FluidHub import Tools
 from FluidHub.ConfigManager import ConfigMan
 from FluidHub.WaresOperations import WaresOperations
 
@@ -20,9 +21,26 @@ import uiCommon
 
 
 class SearchForm(FlaskForm):
-    Terms = StringField('Searched terms', validators=[DataRequired()])
-    Search = SubmitField("Search")
+  Terms = StringField('Searched terms', validators=[DataRequired()])
+  Search = SubmitField("Search")
 
+
+class EditForm(FlaskForm):
+  ShortDesc = TextAreaField('Short description')
+  UsersRO = StringField('Read-only users')
+  UsersRW = StringField('Read-write users')
+  MailingList = StringField('Mailing list')
+
+class AddForm(EditForm):
+  ID = StringField('ID', validators=[DataRequired()])
+  SubmitAdd = SubmitField("Add")
+
+class UpdateForm(EditForm):
+  SubmitUpdate = SubmitField("Update")
+
+class DeleteForm(FlaskForm):
+  ID = StringField('ID', validators=[DataRequired()])
+  SubmitDelete = SubmitField("Delete")
 
 
 WaresOps = WaresOperations()
@@ -32,26 +50,18 @@ WaresOps = WaresOperations()
 ################################################################################
 
 
+def initTemplateVariables():
+  Vars = uiCommon.initTemplateVariables()
+  Vars["Breadcrumbs"].append({ "Label" : "Wares", "URL" : url_for(".WaresHome")})
+  return Vars
+
+
+################################################################################
+
+
 def buildWaresListVars(WareType,WaresInfos,WaresDetails) :
 
-  # TODO check if generated URL is correct
-  PortColon = ""
-  Port = ConfigMan.get("global","url-port","")
-  if Port :
-    PortColon = ":%s" % Port
-
-  ClientURL = [ ConfigMan.get("global","url-protocol"),"://",
-                ConfigMan.get("global","url-host"),PortColon,
-              ]
-
   WaresCount = len(WaresInfos[WareType])
-
-  TypesButtons = []
-  for WType in Constants.WareTypes :
-    TypesButtons.append(dict(Name=WType,
-                             Title=Constants.WareTypesNames[WType].capitalize(),
-                             Count=len(WaresInfos[WType]),
-                             Active=(WType==WareType)))
 
   WaresList = []
   for Key in sorted(WaresDetails) :
@@ -63,15 +73,34 @@ def buildWaresListVars(WareType,WaresInfos,WaresDetails) :
   # TODO display doc availability
   # TODO display compatible versions based on git branches
 
-  Vars = uiCommon.initTemplateVariables()
+  Vars = initTemplateVariables()
   Vars["WaresType"] = WareType
   Vars["WaresTypeSingular"] = Constants.WareTypesNamesSingular[WareType]
-  Vars["ClientURL"] = "".join(ClientURL)
-  Vars["TypesButtons"] = TypesButtons
   Vars["WaresCount"] = WaresCount
   Vars["WaresList"] = WaresList
 
   return Vars
+
+
+################################################################################
+
+
+def renderWaresHome():
+  Code,WaresInfos = WaresOps.getAllWaresInfo()
+  if Code != 200 :
+    # REVIEW manage this better
+    abort(500)
+
+  TypesButtons = []
+  for WType in Constants.WareTypes :
+    TypesButtons.append(dict(Name=WType,
+                             Title=Constants.WareTypesNames[WType].capitalize(),
+                             Count=len(WaresInfos[WType])))
+
+  Vars = initTemplateVariables()
+  Vars["TypesButtons"] = TypesButtons
+
+  return render_template("wareshome.html",**Vars)
 
 
 ################################################################################
@@ -82,7 +111,7 @@ def renderWaresList(WaresType):
   SearchF = SearchForm()
 
   if WaresType not in Constants.WareTypes :
-    # TODO manage this better
+    # REVIEW manage this better
     abort(404)
 
   SearchFilter = None
@@ -91,17 +120,53 @@ def renderWaresList(WaresType):
 
   Code,WaresInfos = WaresOps.getAllWaresInfo()
   if Code != 200 :
-    # TODO manage this better
+    # REVIEW manage this better
     abort(500)
 
   Code,WaresDetails = WaresOps.getWaresInfo(WaresType)
   if Code != 200 :
-    # TODO manage this better
+    # REVIEW manage this better
     abort(500)
 
   Vars = buildWaresListVars(WaresType,WaresInfos,WaresDetails)
-
+  Vars["Breadcrumbs"].append({ "Label" : Vars["WaresType"], "URL" : url_for(".WaresList",ware_type=WaresType)})
   Vars["SearchF"] = SearchF
+
+  if g.IsAdmin :
+    AddF = AddForm()
+    if AddF.SubmitAdd.data and request.method == 'POST':
+      if AddF.validate():
+        OK = True
+
+        UsersRO = Tools.getAsValidList(AddF.UsersRO.data,Tools.isValidUsername,True,",")
+        if UsersRO is None:
+          OK = False
+          flash("invalid read-only users list")
+
+        UsersRW = Tools.getAsValidList(AddF.UsersRW.data,Tools.isValidUsername,True,",")
+        if UsersRW is None:
+          OK = False
+          flash("invalid read-write users list")
+
+        MailingList = Tools.getAsValidList(AddF.MailingList.data,Tools.isValidEmail,False,",")
+        if MailingList is None:
+          OK = False
+          flash("invalid mailing list")
+
+        if OK :
+          Def = dict()
+          Def["shortdesc"] = AddF.ShortDesc.data
+          Def["users-ro"] = UsersRO
+          Def["users-rw"] = UsersRW
+          Def["mailinglist"] = MailingList
+          Code,ErrMsg = WaresOps.createWare(WaresType,AddF.ID.data,Def)
+          if Code != 201:
+            flash(ErrMsg)
+      else:
+        flash("invalid or incomplete form for adding %s" % Constants.WareTypesNamesSingular[WaresType])
+      return redirect(url_for(".WaresList",ware_type=WaresType))
+
+    Vars["AddF"] = AddF
 
   return render_template("wareslist.html",**Vars)
 
@@ -111,25 +176,26 @@ def renderWaresList(WaresType):
 
 def renderWareDetails(WareType,WareID):
 
-
     Username = None
     if "username" in session:
       Username = session["username"]
 
     if WareType not in Constants.WareTypes :
-      # TODO manage this better
+      # REVIEW manage this better
       abort(404)
 
     WareDef = WaresOps.getWareDefinition(WareType,WareID)
     if not WareDef :
-      # TODO manage this better
+      # REVIEW manage this better
       abort(404)
 
     # TODO display compatibility info based on git branches
     # TODO display contributors
     # TODO show informations (tags, status, commits, issues) by git branch
 
-    Vars = uiCommon.initTemplateVariables()
+    Vars = initTemplateVariables()
+    Vars["Breadcrumbs"].append({ "Label" : WareType, "URL" : url_for(".WaresList",ware_type=WareType)})
+    Vars["Breadcrumbs"].append({ "Label" : WareID, "URL" : ""})
     Vars["WaresType"] = WareType
     Vars["WaresTypeSingular"] = Constants.WareTypesNamesSingular[WareType]
     Vars["WareID"] = WareID
@@ -137,11 +203,78 @@ def renderWareDetails(WareType,WareID):
     Vars["Def"] = {
                     'ShortDesc' : WareDef["shortdesc"],
                     'UsersRO' : WareDef["users-ro"],
-                    'UsersRW' : WareDef["users-rw"]
+                    'UsersRW' : WareDef["users-rw"],
+                    'MailingList' : WareDef["mailinglist"]
                   }
     Vars["WareDoc"] = None
     Vars["GitURL"] = WaresOps.getWareGitURL(WareType,WareID,Username)
     Vars["GitInfos"] = dict()
     Vars["SelectedGitBranch"] = request.args.get("branch",None)
+
+    if g.IsAdmin :
+      UpdF = UpdateForm()
+      DelF = DeleteForm()
+
+      if request.method == 'GET':
+        UpdF.ShortDesc.data = WareDef["shortdesc"]
+        UpdF.UsersRO.data = ",".join(WareDef["users-ro"])
+        UpdF.UsersRW.data = ",".join(WareDef["users-rw"])
+        UpdF.MailingList.data = ",".join(WareDef["mailinglist"])
+
+      if request.method == 'POST':
+
+        if DelF.SubmitDelete.data :
+          if DelF.validate():
+            if DelF.ID.data == WareID:
+              Code,ErrMsg = WaresOps.deleteWare(WareType,DelF.ID.data)
+              if Code != 200:
+                flash(ErrMsg)
+            else:
+              flash("wrong confirmation ID for deleting %s %s" % (Constants.WareTypesNamesSingular[WareType],WareID))
+              return redirect(url_for(".WareDetails",ware_type=WareType,ware_id=WareID))
+          else:
+            flash("invalid or incomplete form for deleting %s %s" % (Constants.WareTypesNamesSingular[WareType],WareID))
+            return redirect(url_for(".WareDetails",ware_type=WareType,ware_id=WareID))
+
+          return redirect(url_for(".WaresList",ware_type=WareType))
+
+        elif UpdF.SubmitUpdate.data :
+
+          if UpdF.validate():
+            OK = True
+
+            UsersRO = Tools.getAsValidList(UpdF.UsersRO.data,Tools.isValidUsername,True,",")
+            if UsersRO is None:
+              OK = False
+              flash("invalid read-only users list for updating %s" % WareID)
+
+            UsersRW = Tools.getAsValidList(UpdF.UsersRW.data,Tools.isValidUsername,True,",")
+            if UsersRW is None:
+              OK = False
+              flash("invalid read-write users list for updating %s" % WareID)
+
+            MailingList = Tools.getAsValidList(UpdF.MailingList.data,Tools.isValidEmail,False,",")
+            print "UpdF.MailingList.data",UpdF.MailingList.data
+            print "MailingList",MailingList
+            if MailingList is None:
+              OK = False
+              flash("invalid mailing list for updating %s" % WareID)
+
+            if OK :
+              Def = dict()
+              Def["shortdesc"] = UpdF.ShortDesc.data
+              Def["users-ro"] = UsersRO
+              Def["users-rw"] = UsersRW
+              Def["mailinglist"] = MailingList
+
+              Code,ErrMsg = WaresOps.updateWare(WareType,WareID,Def)
+              if Code != 200:
+                flash(ErrMsg)
+          else:
+            flash("invalid or incomplete form for updating %s %s" % (Constants.WareTypesNamesSingular[WareType],WareID))
+          return redirect(url_for(".WareDetails",ware_type=WareType,ware_id=WareID))
+
+      Vars["UpdF"] = UpdF
+      Vars["DelF"] = DelF
 
     return render_template("waredetails.html",**Vars)

@@ -1,19 +1,17 @@
 
-
 __license__ = "AGPLv3"
 __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 
-from FluidHub.ConfigManager import ConfigMan
+import os
+import sys
 
 
 ################################################################################
 ################################################################################
 
 
-def initTemplateVariables() :
-  Vars = dict()
-  Vars["Breadcrumbs"] = list()
-  Vars["Title"] = ConfigMan.get("ui","title","no title")
-
-  return Vars
+CurrentPath = os.path.dirname(os.path.abspath(__file__))
+RootPath = os.path.dirname(os.path.dirname(CurrentPath))
+FluidHubPath = os.path.join(RootPath,"fluidhub")
+sys.path.append(FluidHubPath)

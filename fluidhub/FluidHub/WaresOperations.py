@@ -180,8 +180,6 @@ class WaresOperations :
 
   def updateWare(self,Type,ID,Definition) :
 
-    # TODO implement updating ware
-
     WareGitPath = self.getWareGitReposPath(Type,ID)
     WareDefPath = self.getWaresDefsPath(Type)
     WareDefFile = self.getWareDefFilePath(Type,ID)
@@ -189,9 +187,22 @@ class WaresOperations :
     if not os.path.exists(WareGitPath) or not os.path.isfile(WareDefFile) :
       return 404,"does not exists"
 
-    return 501,"not implemented"
+    with open(WareDefFile, 'r') as DefFileR:
+      Data = json.load(DefFileR)
+      DefFileR.close()
 
-    return 200,""
+      DefKeys = Definition.keys()
+      for Key in ["shortdesc","users-ro","users-rw","mailinglist"] :
+        if Key in DefKeys:
+          Data[Key] = Definition[Key]
+
+      # writing the updated definition
+      with open(WareDefFile, 'w') as DefFileW:
+        json.dump(Data, DefFileW, indent=2)
+
+      return 200,""
+
+    return 500,"error in existing definition file"
 
 
 ################################################################################

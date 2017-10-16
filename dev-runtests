@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-CWDIR="$(dirname "$(readlink -f "$0")")"
+CWDIR=$(cd "$(dirname "$0")"; pwd)
 
 FLUIDHUB_DATAPATH=${CWDIR}/_dev/server/data docker-compose \
 -f docker/docker-compose.yml \

@@ -32,17 +32,21 @@ Wares = { "simulators" : ["sim.01","sim.02","sim.03"],
         }
 
 Users = {
-          "user1" : {
-            "password" : "user1"
+          "john" : {
+            "password" : "john"
           },
-          "user2" : {
-            "password" : "user2",
-            "fullname" : "User 2"
+          "paul" : {
+            "password" : "paul",
+            "fullname" : "Paul McC."
           },
-          "user3" : {
-            "password" : "user3",
-            "fullname" : "User 3",
-            "email" : "user3@users.org"
+          "george" : {
+            "password" : "george",
+            "fullname" : "George H.",
+            "email" : "george@sgtpepper.org"
+          },
+          "ringo" : {
+            "password" : "ringo",
+            "email" : "ringo@yellowsubmarine.org"
           }
         }
 
@@ -63,6 +67,15 @@ def executeGetRequest(URL,Headers=dict()):
 def executePutRequest(URL,Data,Headers=dict()):
   Headers['cache-control'] = "no-cache"
   Response = requests.request("Put", URL, data=Data,headers=Headers)
+  return Response
+
+
+################################################################################
+
+
+def executePatchRequest(URL,Data,Headers=dict()):
+  Headers['cache-control'] = "no-cache"
+  Response = requests.request("Patch", URL, data=Data,headers=Headers)
   return Response
 
 

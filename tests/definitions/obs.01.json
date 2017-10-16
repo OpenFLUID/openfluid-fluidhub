@@ -1,7 +1,7 @@
 {
   "shortdesc": "This is observer 01",
   "users-ro": [
-    "user1"
+    "john"
   ],
   "users-rw": [
     "admin"

@@ -3,7 +3,7 @@ __license__ = "AGPLv3"
 __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 
-from flask import Blueprint,jsonify,request,g
+from flask import Blueprint,jsonify,request,g,abort
 
 from FluidHub import Constants
 from FluidHub.UsersManager import UsersMan
@@ -49,7 +49,7 @@ def GetUser(username) :
 @tokenAuth.login_required
 def CreateUser(username) :
 
-  if g.username != "admin":
+  if not UsersMan.isAdmin(g.username):
     abort(403)
 
   Data = request.get_json(silent=True)
@@ -66,7 +66,7 @@ def CreateUser(username) :
 @tokenAuth.login_required
 def UpdateUser(username) :
 
-  if g.username != "admin":
+  if not UsersMan.isAdmin(g.username):
     abort(403)
 
   abort(501)
@@ -79,7 +79,7 @@ def UpdateUser(username) :
 @tokenAuth.login_required
 def DeleteUser(username) :
 
-  if g.username != "admin":
+  if not UsersMan.isAdmin(g.username):
     abort(403)
 
   Code,Res = UsersMan.deleteUser(username)

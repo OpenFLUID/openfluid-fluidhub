@@ -4,10 +4,11 @@
   <head>
     <meta http-equiv='content-type' content='text/html; charset=UTF-8'>
     <title>{{ Title }}</title>
+    <link rel="icon" type="image/png" href="{{ url_for('.static', filename='images/favicon.png') }}" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400|Open+Sans+Condensed:300,400' rel='stylesheet' type='text/css'>
     <link rel='stylesheet' href='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css'>
     <link rel='stylesheet' href='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css'>
-    <link rel='stylesheet' type=text/css href="{{ url_for('.static', filename='wareshub.css') }}">
+    <link rel='stylesheet' type=text/css href="{{ url_for('.static', filename='css/fluidhub.css') }}">
     <script src='http://code.jquery.com/jquery-1.11.0.min.js'></script>
     <script src='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js'></script>
 
@@ -20,12 +21,28 @@
   </head>
   <body>
     <div id='wrap'>
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-danger alert-dismissible flash-zone" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <strong>Error!</strong>
+          <ul>
+          {% for message in messages %}
+          <li>{{ message }}</li>
+          {% endfor %}
+          </ul>
+        </div>
+       {% endif %}
+     {% endwith %}
       <nav class='navbar navbar-topmenu' role='navigation'>
         <div class='container'>
-          <div class='navbar-header'>{{ Title }}</div>
+          <div class='navbar-header'>
+            <a href='{{ url_for('.Home') }}'><img src='{{ url_for('.static', filename='images/openfluid_icon_menu.png') }}'></a>&nbsp;&nbsp;{{ Title }}
+          </div>
           <div class=''>{{ login_box(g.LoginF) }}</div>
         </div>
       </nav>
+      {% include 'breadcrumbs.html' %}
       {% block content %}{% endblock %}
       <div id='push'></div>
     </div>

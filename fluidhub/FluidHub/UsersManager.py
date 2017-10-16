@@ -5,7 +5,6 @@ __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 from sqlalchemy import create_engine, MetaData, Table
 import bcrypt
-import re
 
 from FluidHub import Tools
 
@@ -82,8 +81,8 @@ class UsersManager :
 
   def createUser(self, Username, Definition) :
     # check valid chars for username (A-Z,a-z,0-9,.,_, must start with an alphabetic char)
-    if not re.match("^[a-z][a-z0-9_-]*$", Username):
-      return 400,"invalid username"
+    if not Tools.isValidUsername(Username):
+      return 400,"invalid username format"
 
     # check if provided json data is correct
     if not all(name in Definition for name in ("username","password")) :
@@ -94,6 +93,8 @@ class UsersManager :
 
     if "email" not in Definition.keys() :
       Definition["email"] = ""
+    elif not Tools.isValidEmail(Definition["email"]):
+      return 400,"invalid email format"
 
     if "fullname" not in Definition.keys() :
       Definition["fullname"] = ""
@@ -120,8 +121,14 @@ class UsersManager :
 
 
   def updateUser(self, Username, Definition) :
-    # TODO
-    return 501,""
+
+    if "fullname" in Definition:
+      self.Users.update().where(self.Users.c.username == Username).values(fullname=Definition["fullname"]).execute()
+
+    if "email" in Definition:
+      self.Users.update().where(self.Users.c.username == Username).values(email=Definition["email"]).execute()
+
+    return 200,""
 
 
 ################################################################################
@@ -144,9 +151,23 @@ class UsersManager :
 ################################################################################
 
 
-  def changePassword(self, Username, OldPassword, NewPassword) :
-    # TODO
-    return False
+  def changePassword(self, Username, NewPassword) :
+
+    Salt = bcrypt.gensalt()
+    HashedPassword = bcrypt.hashpw(NewPassword.encode('utf8'), Salt)
+
+    self.Users.update().where(self.Users.c.username == Username).values(password=HashedPassword).execute()
+
+    return 200,""
+
+
+################################################################################
+
+
+  @staticmethod
+  def isAdmin(Username) :
+    return Username == "admin"
+
 
 
 ################################################################################

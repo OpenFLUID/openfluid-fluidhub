@@ -1,10 +1,10 @@
 {
   "shortdesc": "This is observer 02",
   "users-ro": [
-    "user2"
+    "paul"
   ],
   "users-rw": [
-    "user2"
+    "paul"
   ],
   "mailinglist": [
     "contact@openfluid-project.org"

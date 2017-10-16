@@ -40,7 +40,7 @@ app.register_blueprint(ui,url_prefix='/'+ConfigMan.get("ui","url-prefix"))
 
 @app.route("/")
 def Root():
-  return redirect(url_for('ui.Root'))
+  return redirect(url_for('ui.Home'))
 
 
 

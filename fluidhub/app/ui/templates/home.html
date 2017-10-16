@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class='jumbotron-home'>
+  <div class='container'>
+    <div class='intro-text'>
+      {{ WelcText }}
+    </div>
+    <span class='glyphicon glyphicon-cloud-download'></span>&nbsp;URL for WaresHub client is
+    <input class='' type='text' readonly='readonly' size='42' value='{{ ClientURL }}'></input>
+  </div>
+</div>
+<div class='container'>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <h4><a href="{{ url_for('.WaresHome') }}">Wares repositories</a></h4>
+    </div>
+  </div>
+</div>
+{% if g.IsAdmin %}
+<br/>
+<div class='container'>
+  <div class="panel panel-danger">
+    <div class="panel-heading">Administration</div>
+    <div class="panel-body">
+      <h4><a href="{{ url_for('.AdminUsersList') }}">Users management</a></h4>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

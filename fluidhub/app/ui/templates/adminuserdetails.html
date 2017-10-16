@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+<div class='container'>
+  {% if g.IsAdmin %}
+  <!-- Admin buttons -->
+  <div class="btn-group" role="group" aria-label="AdminButtons">
+    <button type="button" class="btn btn-danger btn-xsm" data-toggle="modal" data-target="#EditModal">Update</button>
+    <button type="button" class="btn btn-danger btn-xsm" data-toggle="modal" data-target="#ChPwdModal">Change password</button>
+    <button type="button" class="btn btn-danger btn-xsm" data-toggle="modal" data-target="#DelModal">Delete</button>
+  </div>
+  <!-- Edit modal -->
+  <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="EditModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="EditModalLabel">Edit user <strong>{{ UserDetails.username }}</strong></h4>
+        </div>
+        <form role='form' method='post'>
+          <div class='modal-body form-group'>
+            {{ UpdF.csrf_token }}
+            {{ UpdF.FullName.label.text }}: {{ UpdF.FullName(class="form-control input-sm") }}<br/>
+            {{ UpdF.EMail.label.text }}: {{ UpdF.EMail(size=30,class="form-control input-sm") }}<br/>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-xsm" data-dismiss="modal">Cancel</button>
+            {{ UpdF.SubmitUpdate(class="btn btn-default btn-xsm") }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Change password modal -->
+  <div class="modal fade" id="ChPwdModal" tabindex="-1" role="dialog" aria-labelledby="ChPwdModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="ChPwdModalLabel">Chnage password for user <strong>{{ UserDetails.username }}</strong></h4>
+        </div>
+        <form role='form' method='post'>
+          <div class='modal-body form-group'>
+            {{ ChPwdF.csrf_token }}
+            {{ ChPwdF.Password1.label.text }}: {{ ChPwdF.Password1(size=30,class="form-control input-sm") }}
+            {{ ChPwdF.Password2.label.text }}: {{ ChPwdF.Password2(size=30,class="form-control input-sm") }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-xsm" data-dismiss="modal">Cancel</button>
+            {{ ChPwdF.SubmitChPwd(class="btn btn-default btn-xsm") }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Delete modal -->
+  <div class="modal fade" id="DelModal" tabindex="-1" role="dialog" aria-labelledby="DelModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="DelModalLabel">Delete user</h4>
+        </div>
+        <form role='form' method='post'>
+          <div class='modal-body form-group'>
+            {{ DelF.csrf_token }}
+            <p class="text-danger">Please, type in the username to confirm the definitive deletion:</p>
+            {{ DelF.Username(size=20,class="form-control input-sm alert-danger") }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-xsm" data-dismiss="modal">Cancel</button>
+            {{ DelF.SubmitDelete(class="btn btn-default btn-xsm") }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  <br/><br/>
+  <br/>
+  <div class='row'>
+    <div class="col-md-4 text-right">Full name : </div><div class="col-md-8">{% if UserDetails.fullname %}{{ UserDetails.fullname }}{% else %}<p class="text-muted">(none)</p>{% endif %}</div>
+  </div>
+  <div class='row'>
+    <div class="col-md-4 text-right">E-mail : </div><div class="col-md-8">{% if UserDetails.email %}{{ UserDetails.email }}{% else %}<p class="text-muted">(none)</p>{% endif %}</div>
+  </div>
+</div>
+{% endblock %}

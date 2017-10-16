@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<br/>
+<div class='container'>
+  <div class='row'>
+    {% for Type in TypesButtons %}
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <a href='{{ url_for('.WaresList',ware_type=Type.Name) }}'><h4>{{ Type.Title }}</a>&nbsp;<span class='badge'>{{ Type.Count }}</span></h4>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class='container'>
+  {% if g.IsAdmin %}
+  <!-- Admin buttons -->
+  <div class="btn-group" role="group" aria-label="AdminButtons">
+    <button type="button" class="btn btn-danger btn-xsm" data-toggle="modal" data-target="#AddModal">Add</button>
+  </div>
+  <!-- Add modal -->
+  <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Add User</h4>
+        </div>
+        <form role='form' method='post'>
+          <div class='modal-body form-group'>
+            {{ AddF.csrf_token }}
+            {{ AddF.Username.label.text }}: {{ AddF.Username(size=30,class="form-control input-sm") }}<br/>
+            {{ AddF.FullName.label.text }}: {{ AddF.FullName(class="form-control input-sm") }}<br/>
+            {{ AddF.EMail.label.text }}: {{ AddF.EMail(size=30,class="form-control input-sm") }}<br/>
+            {{ AddF.Password1.label.text }}: {{ AddF.Password1(size=30,class="form-control input-sm") }}<br/>
+            {{ AddF.Password2.label.text }}: {{ AddF.Password2(size=30,class="form-control input-sm") }}<br/>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-xsm" data-dismiss="modal">Cancel</button>
+            {{ AddF.SubmitAdd(class="btn btn-default btn-xsm") }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  <table class='table' wdith='100%'>
+    <tr>
+      <th width='60%'>Username</th>
+      <th width='20%'>Fullname</th>
+      <th>Admin. rights</th>
+    </tr>
+    {% for User in UsersList %}
+    <tr>
+      <td width='40%'><a href='{{ url_for('.AdminUserDetails',username=User.username) }}'>{{ User.username }}</a></td>
+      <td width='40%'>{{ User.fullname }}</td>
+      <td>{% if User.isadmin %}Yes{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

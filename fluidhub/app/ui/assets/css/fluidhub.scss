@@ -1,0 +1,290 @@
+
+$BodyTextColor : #555;
+$BodyBgColor : #f7f7f7;
+$NavBgColor :  #343c47;
+$NavTextColor : #ffffff;
+$JumboHomeBgColor : #1e4d60; //#1E516F; //#196087;
+$JumboHomeTextColor : $NavTextColor;
+$ButtonActiveBgColor : #8cb04b;
+$ErrorTextColor : #ff4444;
+$IssueBugColor : #e6603a;
+$IssueFeatureColor : #8ad242;
+$IssueReviewColor : #42d0d2;
+$BranchStarColor : #ffc852;
+$TagBgColor : #6dc3e4;
+$FooterBgColor :  $JumboHomeBgColor;
+$FooterTextColor : #ccc;
+
+$AnchorTextColor : lighten( $JumboHomeBgColor, 15% );
+
+// ===========================================================================
+
+
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+     -moz-border-radius: $radius;
+      -ms-border-radius: $radius;
+          border-radius: $radius;
+}
+
+@mixin box-shadow($shadow) {
+  -webkit-box-shadow: $shadow;
+     -moz-box-shadow: $shadow;
+          box-shadow: $shadow;
+}
+
+@mixin linear-gradient-vertical($begin,$end) {
+  background: $begin; /* Old browsers */
+  background: -moz-linear-gradient(top, $begin 0%, $end 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, $begin 0%, $end 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, $begin 0%, $end 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+
+
+// ===========================================================================
+
+
+html {
+  height: 100%;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  text-align: justify;
+  height: 100%;
+  color: $BodyTextColor;
+  background-color: $BodyBgColor;
+}
+
+a {
+  color : $AnchorTextColor;
+}
+
+a:hover {
+  color : $AnchorTextColor;
+}
+
+.flash-zone {
+  margin : 0;
+  border: none;
+  @include border-radius(0);
+}
+
+#wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -60px;
+}
+
+#push,
+#footer {
+  height: 60px;
+}
+
+#footer {
+  background-color: $FooterBgColor;
+  color : $FooterTextColor;
+  border-top: 1px solid #ddd;
+}
+
+.container {
+  width: 970px;
+}
+
+hr.warepage {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-width: 1px 0px 0px;
+}
+
+.navbar {
+  @include border-radius(0);
+//  @include box-shadow(0 1px 10px rgba(0, 0, 0, .1));
+  background-color: $NavBgColor;
+  max-width: none !important;
+  border-bottom : 1px solid #777;
+  min-height: 60px;
+  margin-bottom: 0px;
+  padding-left: 25px;
+  padding-right: 20px;
+  color: $NavTextColor;
+
+  a {
+    color: $NavTextColor;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+}
+
+.navbar-header {
+  font-size : 160%;
+  padding-top : 10px;
+}
+
+.jumbotron-home {
+  @include linear-gradient-vertical($NavBgColor,$JumboHomeBgColor);
+  color : $JumboHomeTextColor;
+  padding-top: 20px;
+  padding-bottom: 50px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #777;
+
+  input[type=text] {
+    color : $BodyTextColor;
+  }
+}
+
+div.intro-text {
+  margin-top : 20px;
+  margin-bottom : 30px;
+  font-size: 200%;
+}
+
+ul.centered-pills {
+  display : inline-block;
+  margin-top : 30px;
+  margin-bottom : 20px;
+}
+
+.nav-pills {
+  >li {
+    border: 1px solid $ButtonActiveBgColor;
+    @include border-radius(6px);
+    margin-right: 25px;
+    margin-left: 25px;
+
+    >a {
+      color: #768A52;
+      font-weight: bold;
+    }
+  }
+}
+
+.nav-pills>li.active>a,
+.nav-pills>li.active,
+.nav-pills>li.active>a:hover {
+  background-color: $ButtonActiveBgColor;
+  @include border-radius(6px);
+}
+
+a.list-group-item.active>.badge,
+.nav-pills>.active>a>.badge {
+  color: #768A52;
+  background-color: #FFF;
+}
+
+.table>tbody>tr>th {
+  border-top: 0px;
+}
+
+div.mainshortdesc {
+  margin-left: 30px;
+  font-size: 75%;
+}
+
+div.mainopenissues {
+  margin-left: 30px;
+  font-size: 80%;
+}
+
+.panel-commit>.panel-heading,
+.panel-commit>.panel-body {
+  padding: 5px 10px;
+}
+
+.panel-commit>.commit-heading {
+  font-size: 90%;
+}
+
+.commit-author {
+  font-size: 90%;
+}
+
+.branch-star {
+  color : $BranchStarColor;
+}
+
+div.contributors-list {
+  margin-top : 5px;
+  margin-left : 40px;
+}
+
+div.contributor {
+  font-size: 100%;
+  margin-top : 5px;
+  margin-bottom : 5px;
+}
+
+div.branch-tab {
+  padding : 20px;
+}
+
+.label-tag {
+  background-color: $TagBgColor;
+  font-size: 90%;
+}
+
+div.issue-stat {
+  margin-left : 5px;
+  margin-right : 45px;
+  display : inline-block;
+  font-size: 115%;
+}
+
+.issue-stat>.glyphicon {
+  font-size : 125%;
+}
+
+.issue-color-bug {
+  color : $IssueBugColor;
+}
+
+.issue-color-feature {
+  color : $IssueFeatureColor;
+}
+
+.issue-color-review {
+  color : $IssueReviewColor;
+}
+
+.search-bar {
+  height : 35px;
+}
+
+.input-xsm {
+    height: 25px;
+    padding: 5px 10px;
+    font-size: 11px;
+    line-height: 1.2;
+    @include border-radius(3px);
+}
+
+.btn-xsm {
+    height: 25px;
+    padding: 5px 10px;
+    font-size: 11px;
+    line-height: 1.2;
+    @include border-radius(3px);
+}
+
+.login-group {
+  padding-top : 10px;
+}
+
+.login-field {
+  margin-top : 10px;
+}
+
+.login-errormsg {
+  color : $ErrorTextColor;
+  font-size : 90%;
+}
+
+.login-checkbox {
+  margin-top : 10px;
+  font-weight : normal;
+  font-size : 90%;
+}

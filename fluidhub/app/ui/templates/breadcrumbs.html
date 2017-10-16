@@ -1,0 +1,8 @@
+{% if Breadcrumbs %}
+<div class='container'>
+  <h3>
+    <a href='{{ url_for('.Home') }}'><span class='glyphicon glyphicon-home'></span></a>
+    {% for Item in Breadcrumbs %}&nbsp;/&nbsp;{% if loop.last %}{{ Item.Label }}{% else %}<a href='{{ Item.URL }}'>{{ Item.Label }}</a>{% endif %}{% endfor %}
+  </h3>
+</div>
+{% endif %}

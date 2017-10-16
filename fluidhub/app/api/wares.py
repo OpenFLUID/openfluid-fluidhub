@@ -3,11 +3,12 @@ __license__ = "AGPLv3"
 __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 
-from flask import Blueprint,jsonify,request,g
+from flask import Blueprint,jsonify,request,g,abort
 
 from FluidHub import Constants
 from FluidHub.WaresOperations import WaresOperations
 from FluidHub.RoutesAuth import tokenAuth
+from FluidHub.UsersManager import UsersManager
 
 
 ################################################################################
@@ -66,7 +67,7 @@ def GetWare(ware_type,ware_id) :
 @tokenAuth.login_required
 def CreateWare(ware_type,ware_id) :
 
-  if g.username != "admin":
+  if not UsersManager.isAdmin(g.username):
     abort(403)
 
   if ware_type not in Constants.WareTypes :
@@ -74,7 +75,7 @@ def CreateWare(ware_type,ware_id) :
 
   WaresOps = WaresOperations()
 
-  # TODO is method check necessary
+  # REVIEW is method check necessary
   if request.method == 'PUT' :
     Code,Data = WaresOps.createWare(ware_type,ware_id,request.get_json(silent=True))
     return Data,Code
@@ -87,7 +88,7 @@ def CreateWare(ware_type,ware_id) :
 @tokenAuth.login_required
 def UpdateWare(ware_type,ware_id) :
 
-  if g.username != "admin":
+  if not UsersManager.isAdmin(g.username):
     abort(403)
 
   if ware_type not in Constants.WareTypes :
@@ -95,7 +96,7 @@ def UpdateWare(ware_type,ware_id) :
 
   WaresOps = WaresOperations()
 
-  # TODO is method check necessary
+  # REVIEW is method check necessary
   if request.method == 'PATCH' :
     Code,Data = WaresOps.updateWare(ware_type,ware_id,request.get_json(silent=True))
     return Data,Code
@@ -108,7 +109,7 @@ def UpdateWare(ware_type,ware_id) :
 @tokenAuth.login_required
 def DeleteWare(ware_type,ware_id) :
 
-  if g.username != "admin":
+  if not UsersManager.isAdmin(g.username):
     abort(403)
 
   if ware_type not in Constants.WareTypes :
@@ -116,7 +117,7 @@ def DeleteWare(ware_type,ware_id) :
 
   WaresOps = WaresOperations()
 
-  # TODO is method check necessary
+  # REVIEW is method check necessary
   if request.method == 'DELETE' :
     Code,Data = WaresOps.deleteWare(ware_type,ware_id)
     return Data,Code

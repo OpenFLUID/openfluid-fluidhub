@@ -106,7 +106,7 @@ FLUIDHUB_DATAPATH=./_dev/server/data docker-compose -f docker/docker-compose.yml
 ## Run tests
 
 
-Run the [nosetests](http://nose.readthedocs.io) tool from the root of the source tree, using the `dev-runtests wrapper` script:
+Run the [nosetests](http://nose.readthedocs.io) tool from the root of the source tree, using the `dev-runtests` wrapper script:
 ```
 ./dev-runtests nosetests
 ```

@@ -1,25 +1,37 @@
 {% extends "base.html" %}
 {% block content %}
-<div class='jumbotron'>
-  <div class='container'>
-    <div class='intro-text'>
-      {{ WelcText }}<br/>
-      <span class='glyphicon glyphicon-cloud-download'></span>&nbsp;URL for WaresHub client is
-      <input class='' type='text' readonly='readonly' size='42' value='{{ ClientURL }}'></input>
-      <div class='text-center'>
-        <ul class='nav nav-pills centered-pills'>
-          {% for Type in TypesButtons %}
-          <li{% if Type.Active %} class='active'{% endif %}>
-            <a href='{{ url_for('.GetWares',ware_type=Type.Name) }}'>{{ Type.Title }}&nbsp;<span class='badge'>{{ Type.Count }}</span></a>
-          </li>
-          {% endfor %}
-        </ul>
+<div class='container'>
+  {% if g.IsAdmin %}
+  <!-- Admin buttons -->
+  <div class="btn-group" role="group" aria-label="AdminButtons">
+    <button type="button" class="btn btn-danger btn-xsm" data-toggle="modal" data-target="#AddModal">Add</button>
+  </div>
+  <!-- Add modal -->
+  <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Add {{ WaresTypeSingular }}</h4>
+        </div>
+        <form role='form' method='post'>
+          <div class='modal-body form-group'>
+            {{ AddF.csrf_token }}
+            {{ AddF.ID.label.text }}: {{ AddF.ID(size=30,class="form-control input-sm") }}<br/>
+            {{ AddF.ShortDesc.label.text }}: {{ AddF.ShortDesc(class="form-control input-sm") }}<br/>
+            {{ AddF.UsersRO.label.text }}: {{ AddF.UsersRO(size=30,class="form-control input-sm") }}<br/>
+            {{ AddF.UsersRW.label.text }}:{{ AddF.UsersRW(size=30,class="form-control input-sm") }}<br/>
+            {{ AddF.MailingList.label.text }}:{{ AddF.MailingList(size=30,class="form-control input-sm") }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-xsm" data-dismiss="modal">Cancel</button>
+            {{ AddF.SubmitAdd(class="btn btn-default btn-xsm") }}
+          </div>
+        </form>
       </div>
     </div>
   </div>
-</div>
-
-<div class='container'>
+  {% endif %}
   {% if WaresCount is equalto 0 %}
   <i>There is no {{ WaresTypeSingular }} available</i>
   {% else %}
@@ -31,6 +43,7 @@
     </div>
   </form>
 </div>
+<br/>
 <div class='container'>
   <table class='table' wdith='100%'>
     <tr>
@@ -40,7 +53,7 @@
     </tr>
     {% for Ware in WaresList if not SearchF.Terms.data or SearchF.Terms.data in Ware.ID %}
     <tr>
-      <td width='60%'><a href='{{ url_for('.GetWare',ware_type=WaresType,ware_id=Ware.ID) }}'>{{ Ware.ID }}</a></td>
+      <td width='60%'><a href='{{ url_for('.WareDetails',ware_type=WaresType,ware_id=Ware.ID) }}'>{{ Ware.ID }}</a></td>
       <td width='20%'></td>
       <td></td>
     </tr>

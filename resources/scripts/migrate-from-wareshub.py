@@ -11,10 +11,7 @@ import argparse
 import json
 import shutil
 
-CurrentPath = os.path.dirname(os.path.abspath(__file__))
-RootPath = os.path.dirname(CurrentPath)
-FluidHubPath = os.path.join(RootPath,"fluidhub")
-sys.path.append(FluidHubPath)
+import __common__
 
 from FluidHub import Constants
 from FluidHub.GitInfosWriter import GitInfosWriter

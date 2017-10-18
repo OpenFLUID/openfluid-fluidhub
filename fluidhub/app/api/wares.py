@@ -75,10 +75,8 @@ def CreateWare(ware_type,ware_id) :
 
   WaresOps = WaresOperations()
 
-  # REVIEW is method check necessary
-  if request.method == 'PUT' :
-    Code,Data = WaresOps.createWare(ware_type,ware_id,request.get_json(silent=True))
-    return Data,Code
+  Code,Data = WaresOps.createWare(ware_type,ware_id,request.get_json(silent=True))
+  return Data,Code
 
 
 ################################################################################
@@ -96,10 +94,8 @@ def UpdateWare(ware_type,ware_id) :
 
   WaresOps = WaresOperations()
 
-  # REVIEW is method check necessary
-  if request.method == 'PATCH' :
-    Code,Data = WaresOps.updateWare(ware_type,ware_id,request.get_json(silent=True))
-    return Data,Code
+  Code,Data = WaresOps.updateWare(ware_type,ware_id,request.get_json(silent=True))
+  return Data,Code
 
 
 ################################################################################
@@ -117,7 +113,5 @@ def DeleteWare(ware_type,ware_id) :
 
   WaresOps = WaresOperations()
 
-  # REVIEW is method check necessary
-  if request.method == 'DELETE' :
-    Code,Data = WaresOps.deleteWare(ware_type,ware_id)
-    return Data,Code
+  Code,Data = WaresOps.deleteWare(ware_type,ware_id)
+  return Data,Code

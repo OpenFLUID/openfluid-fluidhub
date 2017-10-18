@@ -118,6 +118,35 @@ class tests_Tools(unittest.TestCase):
 
 
 ################################################################################
+
+
+  def test20_processGitBranches(self):
+
+    print "Current version git branch : ",Tools.getCurrentVersionGitBranch()
+
+    self.assertTrue(Tools.isOfficialGitBranch("openfluid-1.0"))
+    self.assertTrue(Tools.isOfficialGitBranch("openfluid-1.0.0"))
+    self.assertTrue(Tools.isOfficialGitBranch(Tools.getCurrentVersionGitBranch()))
+    self.assertFalse(Tools.isOfficialGitBranch("openfluid-1.0.0.0"))
+    self.assertFalse(Tools.isOfficialGitBranch("openfluid-1.x"))
+    self.assertFalse(Tools.isOfficialGitBranch("openfluid-1.0-x"))
+
+    self.assertEqual(Tools.getVersionFromGitBranch("openfluid-1.0"),"1.0")
+    self.assertEqual(Tools.getVersionFromGitBranch("openfluid-2.1"),"2.1")
+    self.assertEqual(Tools.getVersionFromGitBranch("openfluid-2.1.5"),"2.1.5")
+    self.assertIsNone(Tools.getVersionFromGitBranch("openfluid-2.1.x"))
+    self.assertIsNone(Tools.getVersionFromGitBranch("openfluid-2.1-preview"))
+    self.assertIsNone(Tools.getVersionFromGitBranch("openflud-2.1"))
+
+    self.assertEqual(Tools.getVersionsFromGitBranches(["openfluid-2.1","openfluid-1.7","openfluid-2.0"]),
+                                                      ["2.1","2.0","1.7"])
+    self.assertEqual(Tools.getVersionsFromGitBranches(["openfluid-2.1","openflid-1.7","openfluid-2.0"]),
+                                                      ["2.1","2.0"])
+    self.assertEqual(Tools.getVersionsFromGitBranches(["openfluid-2.1-preview","openfluid-1.7","openfluid-2.0"]),
+                                                      ["2.0","1.7"])
+
+
+################################################################################
 ################################################################################
 
 

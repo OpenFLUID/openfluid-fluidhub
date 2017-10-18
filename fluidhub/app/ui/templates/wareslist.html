@@ -1,3 +1,4 @@
+{% import "branchstar.html" as BranchStar %}
 {% extends "base.html" %}
 {% block content %}
 <div class='container'>
@@ -7,12 +8,12 @@
     <button type="button" class="btn btn-danger btn-xsm" data-toggle="modal" data-target="#AddModal">Add</button>
   </div>
   <!-- Add modal -->
-  <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="AddModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">Add {{ WaresTypeSingular }}</h4>
+          <h4 class="modal-title" id="AddModalLabel">Add {{ WaresTypeSingular }}</h4>
         </div>
         <form role='form' method='post'>
           <div class='modal-body form-group'>
@@ -49,13 +50,13 @@
     <tr>
       <th width='60%'>ID</th>
       <th width='20%'>Doc</th>
-      <th>OpenFLUID compatibility</th>
+      <th>Higher compatibility</th>
     </tr>
     {% for Ware in WaresList if not SearchF.Terms.data or SearchF.Terms.data in Ware.ID %}
     <tr>
       <td width='60%'><a href='{{ url_for('.WareDetails',ware_type=WaresType,ware_id=Ware.ID) }}'>{{ Ware.ID }}</a></td>
-      <td width='20%'></td>
-      <td></td>
+      <td width='20%'>{% if Ware.Doc %}<a href='{{ url_for('.WarePDFDoc',ware_type=WaresType,ware_id=Ware.ID) }}'><span class='glyphicon glyphicon-file'></span>&nbsp;PDF</a>{% endif %}</td>
+      <td>{% if Ware.HigherVersion %}{% if Ware.HigherVersion == CurrentOFVersion %}{{ BranchStar.Current() }}{% else %}{{ BranchStar.Other() }}{% endif %}{{ Ware.HigherVersion }}{% endif %}</td>
     </tr>
     {% endfor %}
   </table>

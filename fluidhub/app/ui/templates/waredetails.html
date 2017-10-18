@@ -1,3 +1,4 @@
+{% import "branchstar.html" as BranchStar %}
 {% extends "base.html" %}
 {% block content %}
 <div class='container'>
@@ -53,20 +54,42 @@
       </div>
     </div>
   </div>
+  <br/>
   {% endif %}
+  {% if Def.ShortDesc %}
   <h4>{{ Def.ShortDesc }}</h4>
+  <br/>
+  {% endif %}
   <br/>
   <div class='row'>
     <div class='col-md-6'>
       {% if WareDoc %}
-      Documentation: <a href=''><span class='glyphicon glyphicon-file'></span>&nbsp;PDF</a><br/>
+      Documentation: <a href='{{ url_for('.WarePDFDoc',ware_type=WaresType,ware_id=WareID) }}'><span class='glyphicon glyphicon-file'></span>&nbsp;PDF</a><br/>
       {% endif %}
-      OpenFLUID version(s): <br/>
+      {% if HigherVersion %}
+      OpenFLUID version(s):
+      {% if HigherVersion == CurrentOFVersion %}{{ BranchStar.Current() }}{% else %}{{ BranchStar.Other() }}{% endif %}
+      {{ HigherVersion }}
+      {% if OtherVersions %}
+      <span class='text-muted'>and {{ OtherVersions|join(", ") }}</span>
+      {% endif %}
+      {% endif %}
       <br/>
-      {% if Committers %}
-        {{ Committers.Count }} contributors :
-        {% for Person in Committers.People %}
+      {% if GitStats.committers %}
+      <br/>
+      {{ GitStats.committers|length }} contributors :
+      <div class='contributors-list'>
+        {% for Committer in GitStats.committers %}
+        <div class='media contributor'>
+          <a class='pull-left' href='#'>
+            <img class='media-object' src='http://www.gravatar.com/avatar/{{ GitStats.committers[Committer].hashedemail }}?s=36&d=mm'/>
+          </a>
+          <div class='media-body'>{{ Committer }}<br/>
+            <span class='text-muted commit-author'>{{ GitStats.committers[Committer].count }} commit(s)</span>
+          </div>
+        </div>
         {% endfor %}
+      </div>
       {% endif %}
     </div>
     <div class='col-md-6'>
@@ -91,11 +114,13 @@
       </div>
     </div>
   </div>
+  {% if False %}
   <hr class='warepage'>
   {% if SelectedGitBranch %}
 
   {% else %}
   <i>This {{ WaresTypeSingular }} seems to be empty</i>
+  {% endif %}
   {% endif %}
 </div>
 {% endblock %}

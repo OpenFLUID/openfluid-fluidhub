@@ -3,7 +3,7 @@
 <form class='navbar-form navbar-right' role='form' method='post'>
   <div class='form-group login-group'>
     {{ Form.csrf_token }}
-    <img class='' src='http://www.gravatar.com/avatar/{{ session["gravatarid"] }}?s=24&d=404'/>&nbsp;&nbsp;{{ session["fullname"] }}&nbsp;&nbsp;&nbsp;
+    <img class='' src='http://www.gravatar.com/avatar/{{ session["gravatarid"] }}?s=24&d=mm'/>&nbsp;&nbsp;{{ session["fullname"] }}&nbsp;&nbsp;&nbsp;
     {{ Form.Signout(class="btn btn-default btn-xsm") }}
   </div>
 </form>

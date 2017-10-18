@@ -7,6 +7,8 @@ import os
 import errno
 import re
 
+from ConfigManager import ConfigMan
+
 
 ################################################################################
 ################################################################################
@@ -74,3 +76,42 @@ def getAsValidList(Str,ValidFunc,WildcardOK=False,Sep=","):
         return None
 
   return ValidLst
+
+
+################################################################################
+
+
+def getCurrentVersionGitBranch() :
+  return "openfluid-"+ConfigMan.get("global","openfluid.currentversion","0.0")
+
+
+################################################################################
+
+
+def isOfficialGitBranch(Branch) :
+  return re.match("^openfluid-\d+\.\d+(\.\d)?$", Branch)
+
+
+################################################################################
+
+
+def getVersionFromGitBranch(Branch) :
+  if isOfficialGitBranch(Branch):
+    return Branch[10:]
+  return None
+
+
+################################################################################
+
+
+def getVersionsFromGitBranches(BranchesList) :
+  Versions = list()
+  for Branch in BranchesList:
+    Ver = getVersionFromGitBranch(Branch)
+    if Ver :
+      Versions.append(Ver)
+
+  #Versions.sort(cmp=lambda x, y: StrictVersion(x).__cmp__(y),reverse=True) # REVIEW use it instead?
+  # from distutils.version import StrictVersion
+  Versions.sort(reverse=True)
+  return Versions

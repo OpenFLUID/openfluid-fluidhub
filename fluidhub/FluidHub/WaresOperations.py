@@ -8,6 +8,7 @@ import json
 import subprocess
 import shutil
 import glob
+import re
 
 from FluidHub.ConfigManager import ConfigMan
 from FluidHub import Constants
@@ -23,15 +24,7 @@ class WaresOperations :
 
     self.ReposRootDir = os.path.join(Constants.RootDataPath,ConfigMan.get("wareshub","gitserver.reposdir"))
     self.DefsRootDir = os.path.join(Constants.RootDataPath,ConfigMan.get("wareshub","gitserver.defsdir"))
-
-
-################################################################################
-
-
-  # TODO check if these is useful and/or located in the right class
-  @staticmethod
-  def getGitCurrentVersionBranch() :
-    return "openfluid-"+ConfigManager.get().get("global","openfluid.currentversion","0.0")
+    self.DocsRootDir = os.path.join(Constants.RootDataPath,ConfigMan.get("wareshub","gitserver.docsdir"))
 
 
 ################################################################################
@@ -53,6 +46,16 @@ class WaresOperations :
 
   def getWareDefFilePath(self,Type,ID) :
     return os.path.join(self.getWaresDefsPath(Type),ID+".json")
+
+
+################################################################################
+
+
+  def getWareDocPDFPath(self,Type,ID) :
+    ExpectedFilePath = os.path.join(self.DocsRootDir,Type,ID+".pdf")
+    if os.path.isfile(ExpectedFilePath):
+      return ExpectedFilePath
+    return None
 
 
 ################################################################################
@@ -248,6 +251,22 @@ class WaresOperations :
 ################################################################################
 
 
+  def getWareGitStats(self,Type,ID) :
+
+    WareGitPath = self.getWareGitReposPath(Type,ID)
+    GitStatsFilePath = os.path.join(WareGitPath,"wareshub-data","gitstats.json")
+
+    if os.path.exists(GitStatsFilePath) :
+      with open(GitStatsFilePath, 'r') as StatsFile:
+        Stats = json.load(StatsFile)
+        return 200,Stats
+
+    return 500,""
+
+
+################################################################################
+
+
   def getWaresInfo(self,Type,Username=None,Filter=None) :
     Infos = dict()
 
@@ -262,14 +281,12 @@ class WaresOperations :
 
         Infos[ID]["git-url"] = self.getWareGitURL(Type,ID,Username)
 
-        GitStatsFilePath = os.path.join(WareGitPath,"wareshub-data","gitstats.json")
-        if os.path.exists(GitStatsFilePath) :
-          with open(GitStatsFilePath, 'r') as StatsFile:
-            Stats = json.load(StatsFile)
-            if "branches" in Stats:
-              Infos[ID]["git-branches"] = Stats["branches"]
-            if "open-issues" in Stats:
-              Infos[ID]["open-issues"] = Stats["open-issues"]
+        Code,Stats = self.getWareGitStats(Type,ID)
+        if Code == 200:
+          if "branches" in Stats:
+            Infos[ID]["git-branches"] = Stats["branches"]
+          if "open-issues" in Stats:
+            Infos[ID]["open-issues"] = Stats["open-issues"]
         else :
           Infos[ID]["git-branches"] = list()
           Infos[ID]["open-issues"] = {"bugs": 0,"features": 0,"reviews": 0}

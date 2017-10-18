@@ -3,7 +3,9 @@ __license__ = "AGPLv3"
 __author__ = "Jean-Christophe Fabre <jean-christophe.fabre@inra.fr>"
 
 
-from flask import render_template,request,abort,session,url_for,g,redirect,flash,get_flashed_messages
+import hashlib
+
+from flask import render_template,request,abort,session,url_for,g,redirect,flash,get_flashed_messages,send_file
 from flask_wtf import FlaskForm
 from wtforms import StringField,SubmitField,TextAreaField
 from wtforms.validators import DataRequired
@@ -67,13 +69,21 @@ def buildWaresListVars(WareType,WaresInfos,WaresDetails) :
   for Key in sorted(WaresDetails) :
     Infos = dict()
     Infos["ID"] = Key
-    # TODO to be completed with versions, etc...
+    Infos["Doc"] = WaresOps.getWareDocPDFPath(WareType,Key) is not None
+    if "git-branches" in WaresDetails[Key]:
+      Versions = Tools.getVersionsFromGitBranches(WaresDetails[Key]["git-branches"])
+      if Versions :
+        Infos["HigherVersion"] = Versions[0]
+      else:
+        Infos["HigherVersion"] = None
+    else:
+      Infos["HigherVersion"] = None
+
     WaresList.append(Infos)
 
-  # TODO display doc availability
-  # TODO display compatible versions based on git branches
 
   Vars = initTemplateVariables()
+  Vars["CurrentOFVersion"] = ConfigMan.get("global","openfluid.currentversion","0.0")
   Vars["WaresType"] = WareType
   Vars["WaresTypeSingular"] = Constants.WareTypesNamesSingular[WareType]
   Vars["WaresCount"] = WaresCount
@@ -189,9 +199,7 @@ def renderWareDetails(WareType,WareID):
       # REVIEW manage this better
       abort(404)
 
-    # TODO display compatibility info based on git branches
-    # TODO display contributors
-    # TODO show informations (tags, status, commits, issues) by git branch
+    # TODO show informations by git branch (tags, status, commits, issues)
 
     Vars = initTemplateVariables()
     Vars["Breadcrumbs"].append({ "Label" : WareType, "URL" : url_for(".WaresList",ware_type=WareType)})
@@ -206,9 +214,32 @@ def renderWareDetails(WareType,WareID):
                     'UsersRW' : WareDef["users-rw"],
                     'MailingList' : WareDef["mailinglist"]
                   }
-    Vars["WareDoc"] = None
+    Vars["WareDoc"] = WaresOps.getWareDocPDFPath(WareType,WareID) is not None
     Vars["GitURL"] = WaresOps.getWareGitURL(WareType,WareID,Username)
-    Vars["GitInfos"] = dict()
+
+    Vars["GitStats"] = dict()
+    Vars["HigherVersion"] = None
+    Vars["OtherVersions"] = None
+    Vars["CurrentOFVersion"] = ConfigMan.get("global","openfluid.currentversion","0.0")
+
+    Code,GitStats = WaresOps.getWareGitStats(WareType,WareID)
+    if Code == 200:
+      Vars["GitStats"] = GitStats
+      if "branches" in GitStats:
+        Versions = Tools.getVersionsFromGitBranches(GitStats["branches"])
+        if Versions :
+          Vars["HigherVersion"] = Versions[0]
+          Vars["OtherVersions"] = Versions[1:]
+        else:
+          Vars["HigherVersion"] = None
+          Vars["OtherVersions"] = None
+      else:
+        Vars["HigherVersion"] = None
+        Vars["OtherVersions"] = None
+      if "committers" in GitStats:
+        for name in GitStats['committers']:
+          GitStats['committers'][name]["hashedemail"] = hashlib.md5(GitStats['committers'][name]["email"].lower()).hexdigest()
+
     Vars["SelectedGitBranch"] = request.args.get("branch",None)
 
     if g.IsAdmin :
@@ -254,8 +285,6 @@ def renderWareDetails(WareType,WareID):
               flash("invalid read-write users list for updating %s" % WareID)
 
             MailingList = Tools.getAsValidList(UpdF.MailingList.data,Tools.isValidEmail,False,",")
-            print "UpdF.MailingList.data",UpdF.MailingList.data
-            print "MailingList",MailingList
             if MailingList is None:
               OK = False
               flash("invalid mailing list for updating %s" % WareID)
@@ -278,3 +307,15 @@ def renderWareDetails(WareType,WareID):
       Vars["DelF"] = DelF
 
     return render_template("waredetails.html",**Vars)
+
+
+
+################################################################################
+
+
+def renderWarePDFDoc(WareType,WareID):
+  FilePath = WaresOps.getWareDocPDFPath(WareType,WareID)
+  if FilePath :
+    return send_file(FilePath, as_attachment=True)
+  else:
+    abort(404)

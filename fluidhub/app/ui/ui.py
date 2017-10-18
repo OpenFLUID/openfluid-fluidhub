@@ -161,9 +161,18 @@ def WaresHome():
 def WaresList(ware_type):
   return uiWareshub.renderWaresList(ware_type)
 
+
 ################################################################################
 
 
 @ui.route("/wareshub/<string:ware_type>/<string:ware_id>",methods=['GET','POST'])
 def WareDetails(ware_type,ware_id):
   return uiWareshub.renderWareDetails(ware_type,ware_id)
+
+
+################################################################################
+
+
+@ui.route("/wareshub/<string:ware_type>/<string:ware_id>/pdf",methods=['GET'])
+def WarePDFDoc(ware_type,ware_id):
+  return uiWareshub.renderWarePDFDoc(ware_type,ware_id)
